@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using OfficeOpenXml; // Agrega la referencia a EPPlus
+using OfficeOpenXml; 
 
 namespace TableAnalizer
 {
@@ -35,7 +35,6 @@ namespace TableAnalizer
 
             this.WindowState = FormWindowState.Maximized;       //Al ejecutar, la ventana siempre esta maximizada
 
-            // Suscribirse al evento de formato de celda
             dataGridView1.CellFormatting += DataGridView_CellFormatting;
             dataGridView2.CellFormatting += DataGridView_CellFormatting;
 
@@ -61,11 +60,9 @@ namespace TableAnalizer
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // Cambia el estilo de las cabeceras de columna a negrita
             dataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font(dataGridView1.Font, FontStyle.Bold);
             dataGridView2.ColumnHeadersDefaultCellStyle.Font = new Font(dataGridView1.Font, FontStyle.Bold);
 
-            // Opcionalmente, también puedes cambiar el color de fondo o el color del texto de las cabeceras:
             dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.Gray;
             dataGridView2.ColumnHeadersDefaultCellStyle.BackColor = Color.Gray;
             dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
@@ -73,9 +70,12 @@ namespace TableAnalizer
         }
 
 
+        //Seleccionar documento
         private void SelectDocument_Click(object sender, EventArgs e)
         {
+            //Evita que se agreguen archivos que no sean ecel
             openFileDialog1.Filter = "Archivos de Excel (*.xlsx)|*.xlsx";
+
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -103,6 +103,7 @@ namespace TableAnalizer
         {
             var dataTable = new System.Data.DataTable();
 
+            //Define las columnas originales
             var originalColumns = new List<string>
             {
                 "Batch Id", "Dyelot Date", "Orders", "Shade Name", "Max Colour Diff", "Batch Status",
@@ -116,9 +117,10 @@ namespace TableAnalizer
                 "Fastness Type", "Dyed From", "Comment", "Colour Category", "Article", "Source Dyehouse", "Speedline Priority"
             };
 
+            //Define las columnas "especiales"
             var columnsToShow = new List<string>
             {
-                "Batch Id", "Dyelot Date", "Orders", "Shade Name", "Max Colour Diff", "Substr Code", "Batch Status", "Count/Ply",
+                "Batch Id", "Dyelot Date", "Shade Name", "Max Colour Diff", "Substr Code", "Batch Status", "Count/Ply",
                 "Fibre Type", "Dyeing Method", "Recipe Status", "Delta L", "Delta c", "Delta h", "Machine Name", "Machine Vol",
                 "Failure Reason", "Dyeclass(es)", "Worker", "Article", "Material Code"
             };
@@ -171,18 +173,18 @@ namespace TableAnalizer
         }
 
         
-
+        //Pinta de rojo los que no pasaron
         private void DataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             var dataGridView = sender as DataGridView;
 
-            // Verifica que estamos en la columna correcta
+            
             if (dataGridView.Columns[e.ColumnIndex].Name == "Batch Status")
             {
-                // Verifica si el valor de la celda no es nulo y es un número
+                
                 if (e.Value != null && e.Value is string valor)
                 {
-                    // Si el valor es mayor a 100, cambia el fondo de la celda a rojo
+                    
                     if (valor == "FAILED")
                     {
                         dataGridView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
@@ -190,44 +192,82 @@ namespace TableAnalizer
                     }
                     else
                     {
-                        e.CellStyle.BackColor = Color.White; // Fondo blanco por defecto
-                        e.CellStyle.ForeColor = Color.Black; // Texto negro por defecto
+                        e.CellStyle.BackColor = Color.White; 
+                        e.CellStyle.ForeColor = Color.Black; 
                     }
                 }
             }
         }
 
+        //Calcula las estadisticas
         private void CountBatch(DataTable dataTable)
         {
             totalLotes = dataTable.Rows.Count;
             lotesFailed = 0;
             lotesPassed = 0;
-            foreach (DataRow row in dataTable.Rows) 
+
+            var counters = new Dictionary<string, Dictionary<string, int>>
+        {
+            {"Substr Code", new Dictionary<string, int>()},
+            {"Count/Ply", new Dictionary<string, int>()},
+            {"Fibre Type", new Dictionary<string, int>()},
+            {"Dyeing Method", new Dictionary<string, int>()},
+            {"Recipe Status", new Dictionary<string, int>()},
+            {"Machine Name", new Dictionary<string, int>()},
+            {"Dyeclass(es)", new Dictionary<string, int>()},
+            {"Worker", new Dictionary<string, int>()},
+            {"Material Code", new Dictionary<string, int>()},
+            {"Article", new Dictionary<string, int>()}
+        };
+
+            foreach (DataRow row in dataTable.Rows)
             {
                 string batchValue = row["Batch Status"].ToString();
-
                 if (batchValue == "FAILED")
                 {
                     lotesFailed++;
+
+                    foreach (var column in counters.Keys)
+                    {
+                        string value = row[column].ToString();
+                        if (!counters[column].ContainsKey(value))
+                        {
+                            counters[column][value] = 0;
+                        }
+                        counters[column][value]++;
+                    }
                 }
-                else if(batchValue == "PASSED"){
+                else if (batchValue == "PASSED")
+                {
                     lotesPassed++;
                 }
             }
-
 
             double passedPercentage = (100.0 * lotesPassed) / totalLotes;
             double failedPercentage = (100.0 * lotesFailed) / totalLotes;
 
             label1.Text = $"Total: {totalLotes} \n\nPassed: {lotesPassed} \n\nFailed: {lotesFailed}";
             label2.Text = $"Passed Percentage: \n{passedPercentage:F2}% \n\nFailed Percentage: \n{failedPercentage:F2}%";
-        }
 
+            // Build the output string for label3 with the 3 most common values
+            StringBuilder output = new StringBuilder();
+            foreach (var column in counters.Keys)
+            {
+                output.Append($"{column}: ");
+                foreach (var value in counters[column].OrderByDescending(kv => kv.Value).Take(3))
+                {
+                    output.Append($"{value.Key}({value.Value})  ");
+                }
+                output.Append("\n\n");
+            }
+            label3.Text = output.ToString();
+        }
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
         }
 
+        //Verifica el estado del Checkbox
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(filePath))
