@@ -36,8 +36,8 @@ namespace TableAnalizer
             this.WindowState = FormWindowState.Maximized;       //Al ejecutar, la ventana siempre esta maximizada
 
             // Suscribirse al evento de formato de celda
-            dataGridView1.CellFormatting += DataGridView1_CellFormatting;
-            dataGridView2.CellFormatting += DataGridView1_CellFormatting;
+            dataGridView1.CellFormatting += DataGridView_CellFormatting;
+            dataGridView2.CellFormatting += DataGridView_CellFormatting;
 
 
             View();
@@ -80,7 +80,7 @@ namespace TableAnalizer
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 filePath = openFileDialog1.FileName;
-                var dataTable = LoadExcelData(filePath, checkBox1.Checked);
+                var dataTable = LoadExcelData(filePath, filterColumns: checkBox1.Checked, filterFailed: checkBox1.Checked);
 
                 if (checkBox1.Checked)
                 {
@@ -99,31 +99,29 @@ namespace TableAnalizer
             }
         }
 
-
-
-        private System.Data.DataTable LoadExcelData(string filePath, bool filterColumns = false)
+        private System.Data.DataTable LoadExcelData(string filePath, bool filterColumns = false, bool filterFailed = false)
         {
             var dataTable = new System.Data.DataTable();
 
             var originalColumns = new List<string>
-    {
-        "Batch Id", "Dyelot Date", "Orders", "Shade Name", "Max Colour Diff", "Batch Status",
-        "Substr Code", "Count/Ply", "Thread Quality", "Fibre Type", "Dyeing Method", "Recipe Status",
-        "Delta L", "Delta c", "Delta h", "Machine Name", "Machine Vol", "Total Cheeses", "Total Batch Weight",
-        "Failure Reason", "Dyeclass(es)", "Dye Triangle 1", "Dye Code 1", "Dye Code 2", "Dye Code 3",
-        "Total Dye Conc Stage 1", "Dye Triangle 2", "Dye Code 4", "Dye Code 5", "Dye Code 6",
-        "Total Dye Conc Stage 2", "Worker", "Shift", "Machine In", "Machine Out", "Dyelot Comments",
-        "Shade Desc", "Shade Card", "Recipe Type", "Material Code", "Customers", "Lub Type", "Unfinished Stnd Type",
-        "L", "A", "B", "Chroma", "Hue", "Recipe Type Code", "No. of Passed Cheeses", "Producer", "Finish Type",
-        "Fastness Type", "Dyed From", "Comment", "Colour Category", "Article", "Source Dyehouse", "Speedline Priority"
-    };
+            {
+                "Batch Id", "Dyelot Date", "Orders", "Shade Name", "Max Colour Diff", "Batch Status",
+                "Substr Code", "Count/Ply", "Thread Quality", "Fibre Type", "Dyeing Method", "Recipe Status",
+                "Delta L", "Delta c", "Delta h", "Machine Name", "Machine Vol", "Total Cheeses", "Total Batch Weight",
+                "Failure Reason", "Dyeclass(es)", "Dye Triangle 1", "Dye Code 1", "Dye Code 2", "Dye Code 3",
+                "Total Dye Conc Stage 1", "Dye Triangle 2", "Dye Code 4", "Dye Code 5", "Dye Code 6",
+                "Total Dye Conc Stage 2", "Worker", "Shift", "Machine In", "Machine Out", "Dyelot Comments",
+                "Shade Desc", "Shade Card", "Recipe Type", "Material Code", "Customers", "Lub Type", "Unfinished Stnd Type",
+                "L", "A", "B", "Chroma", "Hue", "Recipe Type Code", "No. of Passed Cheeses", "Producer", "Finish Type",
+                "Fastness Type", "Dyed From", "Comment", "Colour Category", "Article", "Source Dyehouse", "Speedline Priority"
+            };
 
             var columnsToShow = new List<string>
-    {
-        "Batch Id", "Dyelot Date", "Orders", "Substr Code", "Fibre Type", "Dyeing Method",
-        "Recipe Status", "Machine Name", "Failure Reason", "Dyeclass(es)", "Dye", "Triangle 1",
-        "Worker", "Article", "Machine In", "Machine Out"
-    };
+            {
+                "Batch Id", "Dyelot Date", "Orders", "Substr Code", "Batch Status", "Fibre Type", "Dyeing Method",
+                "Recipe Status", "Machine Name", "Failure Reason", "Dyeclass(es)", "Dye", "Triangle 1",
+                "Worker", "Article", "Machine In", "Machine Out"
+            };
 
             using (var package = new ExcelPackage(new System.IO.FileInfo(filePath)))
             {
@@ -144,15 +142,24 @@ namespace TableAnalizer
                 for (int row = startRow + 1; row <= endRow; row++)
                 {
                     var rowData = dataTable.NewRow();
+                    bool addRow = true;
                     for (int col = startCol; col <= endCol; col++)
                     {
                         string columnName = worksheet.Cells[1, col].Text;
                         if (dataTable.Columns.Contains(columnName))
                         {
                             rowData[columnName] = worksheet.Cells[row, col].Text;
+                            if (filterFailed && columnName == "Batch Status" && worksheet.Cells[row, col].Text != "FAILED")
+                            {
+                                addRow = false;
+                                break;
+                            }
                         }
                     }
-                    dataTable.Rows.Add(rowData);
+                    if (addRow)
+                    {
+                        dataTable.Rows.Add(rowData);
+                    }
                 }
             }
 
@@ -163,11 +170,14 @@ namespace TableAnalizer
             return dataTable;
         }
 
-        private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        
+
+        private void DataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
+            var dataGridView = sender as DataGridView;
 
             // Verifica que estamos en la columna correcta
-            if (dataGridView1.Columns[e.ColumnIndex].Name == "Batch Status")
+            if (dataGridView.Columns[e.ColumnIndex].Name == "Batch Status")
             {
                 // Verifica si el valor de la celda no es nulo y es un número
                 if (e.Value != null && e.Value is string valor)
@@ -175,8 +185,8 @@ namespace TableAnalizer
                     // Si el valor es mayor a 100, cambia el fondo de la celda a rojo
                     if (valor == "FAILED")
                     {
-                        dataGridView1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
-                        dataGridView1.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.White;
+                        dataGridView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
+                        dataGridView.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.White;
                     }
                     else
                     {
@@ -222,7 +232,7 @@ namespace TableAnalizer
         {
             if (!string.IsNullOrEmpty(filePath))
             {
-                var dataTable = LoadExcelData(filePath, checkBox1.Checked);
+                var dataTable = LoadExcelData(filePath, filterColumns: checkBox1.Checked, filterFailed: checkBox1.Checked);
 
                 if (checkBox1.Checked)
                 {
