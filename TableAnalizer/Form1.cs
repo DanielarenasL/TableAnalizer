@@ -214,18 +214,18 @@ namespace TableAnalizer
             lotesPassed = 0;
 
             var counters = new Dictionary<string, Dictionary<string, int>>
-        {
-            {"Substr Code", new Dictionary<string, int>()},
-            {"Count/Ply", new Dictionary<string, int>()},
-            {"Fibre Type", new Dictionary<string, int>()},
-            {"Dyeing Method", new Dictionary<string, int>()},
-            {"Recipe Status", new Dictionary<string, int>()},
-            {"Machine Name", new Dictionary<string, int>()},
-            {"Dyeclass(es)", new Dictionary<string, int>()},
-            {"Worker", new Dictionary<string, int>()},
-            {"Material Code", new Dictionary<string, int>()},
-            {"Article", new Dictionary<string, int>()}
-        };
+            {
+                {"Substr Code", new Dictionary<string, int>()},
+                {"Count/Ply", new Dictionary<string, int>()},
+                {"Fibre Type", new Dictionary<string, int>()},
+                {"Dyeing Method", new Dictionary<string, int>()},
+                {"Recipe Status", new Dictionary<string, int>()},
+                {"Machine Name", new Dictionary<string, int>()},
+                {"Dyeclass(es)", new Dictionary<string, int>()},
+                {"Worker", new Dictionary<string, int>()},
+                {"Material Code", new Dictionary<string, int>()},
+                {"Article", new Dictionary<string, int>()}
+            };
 
             foreach (DataRow row in dataTable.Rows)
             {
@@ -237,11 +237,14 @@ namespace TableAnalizer
                     foreach (var column in counters.Keys)
                     {
                         string value = row[column].ToString();
-                        if (!counters[column].ContainsKey(value))
+                        if (!string.IsNullOrWhiteSpace(value))
                         {
-                            counters[column][value] = 0;
+                            if (!counters[column].ContainsKey(value))
+                            {
+                                counters[column][value] = 0;
+                            }
+                            counters[column][value]++;
                         }
-                        counters[column][value]++;
                     }
                 }
                 else if (batchValue == "PASSED")
@@ -260,10 +263,13 @@ namespace TableAnalizer
             StringBuilder output = new StringBuilder();
             foreach (var column in counters.Keys)
             {
-                output.Append($"{column}: ");
+                output.Append($"{column}:   ");
                 foreach (var value in counters[column].OrderByDescending(kv => kv.Value).Take(3))
                 {
-                    output.Append($"{value.Key}({value.Value})  ");
+                    
+                    
+                     output.Append($"{value.Key}({value.Value})      ");
+                    
                 }
                 output.Append("\n\n");
             }
