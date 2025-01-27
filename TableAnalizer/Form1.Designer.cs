@@ -36,6 +36,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.AnalyzeButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.SuspendLayout();
@@ -119,11 +120,22 @@
             this.label3.Size = new System.Drawing.Size(0, 17);
             this.label3.TabIndex = 8;
             // 
+            // AnalyzeButton
+            // 
+            this.AnalyzeButton.Location = new System.Drawing.Point(876, 600);
+            this.AnalyzeButton.Name = "AnalyzeButton";
+            this.AnalyzeButton.Size = new System.Drawing.Size(246, 125);
+            this.AnalyzeButton.TabIndex = 9;
+            this.AnalyzeButton.Text = "button1";
+            this.AnalyzeButton.UseVisualStyleBackColor = true;
+            this.AnalyzeButton.Click += new System.EventHandler(this.AnalyzeButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1216, 875);
+            this.Controls.Add(this.AnalyzeButton);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.label2);
@@ -153,6 +165,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button AnalyzeButton;
     }
 }
 
