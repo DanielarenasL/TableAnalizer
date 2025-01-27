@@ -118,9 +118,9 @@ namespace TableAnalizer
 
             var columnsToShow = new List<string>
             {
-                "Batch Id", "Dyelot Date", "Orders", "Substr Code", "Batch Status", "Fibre Type", "Dyeing Method",
-                "Recipe Status", "Machine Name", "Failure Reason", "Dyeclass(es)", "Dye", "Triangle 1",
-                "Worker", "Article", "Machine In", "Machine Out"
+                "Batch Id", "Dyelot Date", "Orders", "Shade Name", "Max Colour Diff", "Substr Code", "Batch Status", "Count/Ply",
+                "Fibre Type", "Dyeing Method", "Recipe Status", "Delta L", "Delta c", "Delta h", "Machine Name", "Machine Vol",
+                "Failure Reason", "Dyeclass(es)", "Worker", "Article", "Material Code"
             };
 
             using (var package = new ExcelPackage(new System.IO.FileInfo(filePath)))
