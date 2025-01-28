@@ -36,6 +36,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.Limpiar = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.SuspendLayout();
@@ -51,7 +52,7 @@
             this.SelectDocument.Name = "SelectDocument";
             this.SelectDocument.Size = new System.Drawing.Size(337, 159);
             this.SelectDocument.TabIndex = 0;
-            this.SelectDocument.Text = "Seleccione el documento";
+            this.SelectDocument.Text = "Seleccionar el documento";
             this.SelectDocument.UseMnemonic = false;
             this.SelectDocument.UseVisualStyleBackColor = false;
             this.SelectDocument.Click += new System.EventHandler(this.SelectDocument_Click);
@@ -121,11 +122,28 @@
             this.label3.Size = new System.Drawing.Size(0, 20);
             this.label3.TabIndex = 8;
             // 
+            // Limpiar
+            // 
+            this.Limpiar.AutoSize = true;
+            this.Limpiar.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.Limpiar.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Limpiar.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Limpiar.Location = new System.Drawing.Point(827, 627);
+            this.Limpiar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.Limpiar.Name = "Limpiar";
+            this.Limpiar.Size = new System.Drawing.Size(337, 159);
+            this.Limpiar.TabIndex = 9;
+            this.Limpiar.Text = "Seleccionar otro documento";
+            this.Limpiar.UseMnemonic = false;
+            this.Limpiar.UseVisualStyleBackColor = false;
+            this.Limpiar.Click += new System.EventHandler(this.Limpiar_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1216, 875);
+            this.Controls.Add(this.Limpiar);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.label2);
@@ -155,6 +173,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button Limpiar;
     }
 }
 

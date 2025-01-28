@@ -33,6 +33,7 @@ namespace TableAnalizer
         //Constructor 
         public Form1()
         {
+
             //Usar licencia gratuita
             OfficeOpenXml.ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
 
@@ -52,15 +53,19 @@ namespace TableAnalizer
 
         private void View()
         {
-            if(SelectDocument.Visible == Visible)
+
+            if (SelectDocument.Visible == Visible)
             {
                 label1.Visible = false;
+                Limpiar.Visible = false;
                 label2.Visible = false;
             }
             else
             {
                 label1.Visible = true;
                 label2.Visible = true;
+                Limpiar.Visible = true;
+
 
             }
         }
@@ -302,13 +307,52 @@ namespace TableAnalizer
             }
             else
             {
-                MessageBox.Show("No se ha seleccionado un archivo Excel.");
+                checkBox1 .Checked = false;
             }
         }
 
         private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
+        }
+
+        private void Limpiar_Click(object sender, EventArgs e)
+        {
+            // Limpiar los DataGrid
+            dataGridView1.DataSource = null;
+            dataGridView2.DataSource = null;
+
+            // Reiniciar contadores y porcentajes
+            totalLotes = 0;
+            lotesFailed = 0;
+            lotesPassed = 0;
+            label1.Text = "Total: 0 \n\nPassed: 0 \n\nFailed: 0";
+            label2.Text = "Passed Percentage: \n0.00% \n\nFailed Percentage: \n0.00%";
+            label3.Text = string.Empty;
+
+            // Permitir seleccionar otro archivo
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                filePath = openFileDialog1.FileName;
+                var dataTable = LoadExcelData(filePath, filterColumns: checkBox1.Checked, filterFailed: checkBox1.Checked);
+
+                // Asignar el DataTable al DataGrid correspondiente
+                if (checkBox1.Checked)
+                {
+                    dataGridView2.DataSource = dataTable;
+                    dataGridView2.Visible = true;
+                    dataGridView1.Visible = false;
+                }
+                else
+                {
+                    dataGridView1.DataSource = dataTable;
+                    dataGridView1.Visible = true;
+                    dataGridView2.Visible = false;
+                }
+
+                // Calcular las estadísticas
+                CountBatch(dataTable);
+            }
         }
     }
 }
