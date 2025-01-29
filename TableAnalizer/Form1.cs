@@ -14,6 +14,7 @@ using System.Net.Http;
 using System.Security.Policy;
 using static TableAnalizer.Form1;
 using System.Net.Http.Headers;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace TableAnalizer
 {
@@ -59,13 +60,14 @@ namespace TableAnalizer
                 label1.Visible = false;
                 Limpiar.Visible = false;
                 label2.Visible = false;
+                button1.Visible = false;
             }
             else
             {
                 label1.Visible = true;
                 label2.Visible = true;
                 Limpiar.Visible = true;
-
+                button1.Visible = true;
 
             }
         }
@@ -353,6 +355,80 @@ namespace TableAnalizer
                 // Calcular las estadísticas
                 CountBatch(dataTable);
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var dataTable = (checkBox1.Checked ? dataGridView2 : dataGridView1).DataSource as DataTable;
+            if (dataTable == null)
+            {
+                MessageBox.Show("No hay datos disponibles para mostrar.");
+                return;
+            }
+
+            // Filtrar las filas donde el Batch Status sea "FAILED"
+            var failedDataTable = dataTable.AsEnumerable()
+                .Where(row => row["Batch Status"].ToString() == "FAILED")
+                .CopyToDataTable();
+
+            var columnsToShow = new List<string>
+            {
+                "Batch Id", "Dyelot Date", "Shade Name", "Max Colour Diff", "Substr Code", "Batch Status", "Count/Ply",
+                "Fibre Type", "Dyeing Method", "Recipe Status", "Delta L", "Delta c", "Delta h", "Machine Name", "Machine Vol",
+                "Failure Reason", "Dyeclass(es)", "Worker", "Article", "Material Code"
+            };
+
+            ShowPieCharts(failedDataTable, columnsToShow);
+        }
+
+        private void ShowPieCharts(DataTable dataTable, List<string> columnsToShow)
+        {
+            var form = new Form();
+            var chart = new Chart();
+
+            form.Text = "Diagrama de Torta";
+
+            var comboBox = new ComboBox();
+            comboBox.Dock = DockStyle.Top;
+            comboBox.DataSource = columnsToShow;
+            comboBox.Font = new Font(comboBox.Font.FontFamily, 12); // Aumentar el tamaño de la letra
+            comboBox.Height = 40; // Aumentar el tamaño de la ComboBox
+            comboBox.SelectedIndexChanged += (s, e) => UpdateChart(dataTable, comboBox.SelectedItem.ToString(), chart);
+
+            chart.Dock = DockStyle.Fill;
+            chart.ChartAreas.Add(new ChartArea());
+
+            form.Controls.Add(chart);
+            form.Controls.Add(comboBox);
+
+            UpdateChart(dataTable, columnsToShow[0], chart);
+
+            form.ShowDialog();
+        }
+
+        private void UpdateChart(DataTable dataTable, string columnName, Chart chart)
+        {
+            chart.Series.Clear();
+
+            var series = new Series
+            {
+                ChartType = SeriesChartType.Pie,
+                IsValueShownAsLabel = true,
+                Label = "#VALX (#PERCENT{P0})" // Mostrar nombre y porcentaje
+            };
+
+            var data = dataTable.AsEnumerable()
+                .Where(row => !row.IsNull(columnName))
+                .GroupBy(row => row[columnName].ToString())
+                .Select(group => new { Value = group.Key, Count = group.Count() })
+                .ToList();
+
+            foreach (var item in data)
+            {
+                series.Points.AddXY(item.Value, item.Count);
+            }
+
+            chart.Series.Add(series);
         }
     }
 }
