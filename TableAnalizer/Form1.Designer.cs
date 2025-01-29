@@ -33,11 +33,19 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.Limpiar = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.chartPanel1 = new System.Windows.Forms.Panel();
+            this.chartPanel2 = new System.Windows.Forms.Panel();
+            this.chartPanel3 = new System.Windows.Forms.Panel();
+            this.chartPanel4 = new System.Windows.Forms.Panel();
+            this.chartPanel7 = new System.Windows.Forms.Panel();
+            this.chartPanel8 = new System.Windows.Forms.Panel();
+            this.chartPanel9 = new System.Windows.Forms.Panel();
+            this.chartPanel5 = new System.Windows.Forms.Panel();
+            this.chartPanel6 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.SuspendLayout();
@@ -67,7 +75,7 @@
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(-3, -8);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(1026, 524);
+            this.dataGridView1.Size = new System.Drawing.Size(318, 202);
             this.dataGridView1.TabIndex = 1;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
@@ -76,7 +84,7 @@
             this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView2.Location = new System.Drawing.Point(-3, -8);
             this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.Size = new System.Drawing.Size(1026, 524);
+            this.dataGridView2.Size = new System.Drawing.Size(318, 202);
             this.dataGridView2.TabIndex = 1;
             this.dataGridView2.Visible = false;
             // 
@@ -84,21 +92,11 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(1029, 9);
+            this.label1.Location = new System.Drawing.Point(36, 599);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(93, 39);
             this.label1.TabIndex = 5;
             this.label1.Text = "Total";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(1029, 228);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(75, 31);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "Total";
             // 
             // checkBox1
             // 
@@ -155,16 +153,87 @@
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // chartPanel1
+            // 
+            this.chartPanel1.Location = new System.Drawing.Point(22, 238);
+            this.chartPanel1.Name = "chartPanel1";
+            this.chartPanel1.Size = new System.Drawing.Size(313, 232);
+            this.chartPanel1.TabIndex = 11;
+            // 
+            // chartPanel2
+            // 
+            this.chartPanel2.Location = new System.Drawing.Point(581, 12);
+            this.chartPanel2.Name = "chartPanel2";
+            this.chartPanel2.Size = new System.Drawing.Size(200, 100);
+            this.chartPanel2.TabIndex = 12;
+            // 
+            // chartPanel3
+            // 
+            this.chartPanel3.Location = new System.Drawing.Point(827, 12);
+            this.chartPanel3.Name = "chartPanel3";
+            this.chartPanel3.Size = new System.Drawing.Size(200, 100);
+            this.chartPanel3.TabIndex = 12;
+            // 
+            // chartPanel4
+            // 
+            this.chartPanel4.Location = new System.Drawing.Point(341, 144);
+            this.chartPanel4.Name = "chartPanel4";
+            this.chartPanel4.Size = new System.Drawing.Size(200, 100);
+            this.chartPanel4.TabIndex = 12;
+            // 
+            // chartPanel7
+            // 
+            this.chartPanel7.Location = new System.Drawing.Point(341, 279);
+            this.chartPanel7.Name = "chartPanel7";
+            this.chartPanel7.Size = new System.Drawing.Size(200, 100);
+            this.chartPanel7.TabIndex = 15;
+            // 
+            // chartPanel8
+            // 
+            this.chartPanel8.Location = new System.Drawing.Point(581, 279);
+            this.chartPanel8.Name = "chartPanel8";
+            this.chartPanel8.Size = new System.Drawing.Size(200, 100);
+            this.chartPanel8.TabIndex = 16;
+            // 
+            // chartPanel9
+            // 
+            this.chartPanel9.Location = new System.Drawing.Point(827, 279);
+            this.chartPanel9.Name = "chartPanel9";
+            this.chartPanel9.Size = new System.Drawing.Size(200, 100);
+            this.chartPanel9.TabIndex = 12;
+            // 
+            // chartPanel5
+            // 
+            this.chartPanel5.Location = new System.Drawing.Point(581, 144);
+            this.chartPanel5.Name = "chartPanel5";
+            this.chartPanel5.Size = new System.Drawing.Size(200, 100);
+            this.chartPanel5.TabIndex = 17;
+            // 
+            // chartPanel6
+            // 
+            this.chartPanel6.Location = new System.Drawing.Point(827, 144);
+            this.chartPanel6.Name = "chartPanel6";
+            this.chartPanel6.Size = new System.Drawing.Size(200, 100);
+            this.chartPanel6.TabIndex = 17;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1216, 875);
+            this.Controls.Add(this.chartPanel6);
+            this.Controls.Add(this.chartPanel5);
+            this.Controls.Add(this.chartPanel9);
+            this.Controls.Add(this.chartPanel8);
+            this.Controls.Add(this.chartPanel7);
+            this.Controls.Add(this.chartPanel4);
+            this.Controls.Add(this.chartPanel3);
+            this.Controls.Add(this.chartPanel2);
+            this.Controls.Add(this.chartPanel1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.Limpiar);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.checkBox1);
-            this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.dataGridView2);
@@ -188,11 +257,19 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.DataGridView dataGridView2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button Limpiar;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Panel chartPanel1;
+        private System.Windows.Forms.Panel chartPanel2;
+        private System.Windows.Forms.Panel chartPanel3;
+        private System.Windows.Forms.Panel chartPanel4;
+        private System.Windows.Forms.Panel chartPanel7;
+        private System.Windows.Forms.Panel chartPanel8;
+        private System.Windows.Forms.Panel chartPanel9;
+        private System.Windows.Forms.Panel chartPanel5;
+        private System.Windows.Forms.Panel chartPanel6;
     }
 }
 

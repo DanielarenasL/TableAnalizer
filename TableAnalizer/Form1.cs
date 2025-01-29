@@ -59,13 +59,11 @@ namespace TableAnalizer
             {
                 label1.Visible = false;
                 Limpiar.Visible = false;
-                label2.Visible = false;
                 button1.Visible = false;
             }
             else
             {
                 label1.Visible = true;
-                label2.Visible = true;
                 Limpiar.Visible = true;
                 button1.Visible = true;
 
@@ -236,8 +234,8 @@ namespace TableAnalizer
             double passedPercentage = (100.0 * lotesPassed) / totalLotes;
             double failedPercentage = (100.0 * lotesFailed) / totalLotes;
 
-            label1.Text = $"Total: {totalLotes} \n\nPassed: {lotesPassed} \n\nFailed: {lotesFailed}";
-            label2.Text = $"Passed Percentage: \n{passedPercentage:F2}% \n\nFailed Percentage: \n{failedPercentage:F2}%";
+            label1.Text = $"Total: {totalLotes} \n\nPassed: {lotesPassed} ({passedPercentage:F2}%) \n\nFailed: {lotesFailed} ({failedPercentage:F2}%)";
+
 
             
         }
@@ -287,8 +285,7 @@ namespace TableAnalizer
             totalLotes = 0;
             lotesFailed = 0;
             lotesPassed = 0;
-            label1.Text = "Total: 0 \n\nPassed: 0 \n\nFailed: 0";
-            label2.Text = "Passed Percentage: \n0.00% \n\nFailed Percentage: \n0.00%";
+            label1.Text = "Total: 0  \n\nPassed: 0 (0.00%) \n\nFailed: 0 (0.00%)";
             label3.Text = string.Empty;
 
             // Permitir seleccionar otro archivo
@@ -342,27 +339,24 @@ namespace TableAnalizer
 
         private void ShowPieCharts(DataTable dataTable, List<string> columnsToShow)
         {
-            var form = new Form();
-            var chart = new Chart();
+            var panels = new List<Panel>
+    {
+        chartPanel1, chartPanel2, chartPanel3, chartPanel4, chartPanel5, chartPanel6, chartPanel7, chartPanel8,
+        chartPanel9
+    };
 
-            form.Text = "Diagrama de Torta";
+            for (int i = 0; i < columnsToShow.Count && i < panels.Count; i++)
+            {
+                var columnName = columnsToShow[i];
+                var chart = new Chart();
+                chart.Dock = DockStyle.Fill;
+                chart.ChartAreas.Add(new ChartArea());
 
-            var comboBox = new ComboBox();
-            comboBox.Dock = DockStyle.Top;
-            comboBox.DataSource = columnsToShow;
-            comboBox.Font = new Font(comboBox.Font.FontFamily, 12); // Aumentar el tamaño de la letra
-            comboBox.Height = 40; // Aumentar el tamaño de la ComboBox
-            comboBox.SelectedIndexChanged += (s, e) => UpdateChart(dataTable, comboBox.SelectedItem.ToString(), chart);
+                panels[i].Controls.Clear(); // Limpiar el contenido del panel
+                panels[i].Controls.Add(chart);
 
-            chart.Dock = DockStyle.Fill;
-            chart.ChartAreas.Add(new ChartArea());
-
-            form.Controls.Add(chart);
-            form.Controls.Add(comboBox);
-
-            UpdateChart(dataTable, columnsToShow[0], chart);
-
-            form.ShowDialog();
+                UpdateChart(dataTable, columnName, chart);
+            }
         }
 
         private void UpdateChart(DataTable dataTable, string columnName, Chart chart)
@@ -389,5 +383,7 @@ namespace TableAnalizer
 
             chart.Series.Add(series);
         }
+
+
     }
 }
