@@ -2,15 +2,8 @@
 {
     partial class Form1
     {
-        /// <summary>
-        /// Variable del diseñador necesaria.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Limpiar los recursos que se estén usando.
-        /// </summary>
-        /// <param name="disposing">true si los recursos administrados se deben desechar; false en caso contrario.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +15,6 @@
 
         #region Código generado por el Diseñador de Windows Forms
 
-        /// <summary>
-        /// Método necesario para admitir el Diseñador. No se puede modificar
-        /// el contenido de este método con el editor de código.
-        /// </summary>
         private void InitializeComponent()
         {
             this.SelectDocument = new System.Windows.Forms.Button();
@@ -33,7 +22,6 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.Limpiar = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -46,6 +34,7 @@
             this.chartPanel9 = new System.Windows.Forms.Panel();
             this.chartPanel5 = new System.Windows.Forms.Panel();
             this.chartPanel6 = new System.Windows.Forms.Panel();
+            this.openDataGridViewButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.SuspendLayout();
@@ -97,20 +86,6 @@
             this.label1.Size = new System.Drawing.Size(93, 39);
             this.label1.TabIndex = 5;
             this.label1.Text = "Total";
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.BackColor = System.Drawing.SystemColors.Control;
-            this.checkBox1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.checkBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox1.Location = new System.Drawing.Point(43, 522);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(348, 35);
-            this.checkBox1.TabIndex = 7;
-            this.checkBox1.Text = "Mostrar datos importantes";
-            this.checkBox1.UseVisualStyleBackColor = false;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // label3
             // 
@@ -216,11 +191,22 @@
             this.chartPanel6.Size = new System.Drawing.Size(200, 100);
             this.chartPanel6.TabIndex = 17;
             // 
+            // openDataGridViewButton
+            // 
+            this.openDataGridViewButton.Location = new System.Drawing.Point(218, 627);
+            this.openDataGridViewButton.Name = "openDataGridViewButton";
+            this.openDataGridViewButton.Size = new System.Drawing.Size(117, 65);
+            this.openDataGridViewButton.TabIndex = 19;
+            this.openDataGridViewButton.Text = "button2";
+            this.openDataGridViewButton.UseVisualStyleBackColor = true;
+            this.openDataGridViewButton.Click += new System.EventHandler(this.openDataGridViewButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1216, 875);
+            this.Controls.Add(this.openDataGridViewButton);
             this.Controls.Add(this.chartPanel6);
             this.Controls.Add(this.chartPanel5);
             this.Controls.Add(this.chartPanel9);
@@ -233,7 +219,6 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.Limpiar);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.dataGridView2);
@@ -257,7 +242,6 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.DataGridView dataGridView2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button Limpiar;
         private System.Windows.Forms.Button button1;
@@ -270,6 +254,6 @@
         private System.Windows.Forms.Panel chartPanel9;
         private System.Windows.Forms.Panel chartPanel5;
         private System.Windows.Forms.Panel chartPanel6;
+        private System.Windows.Forms.Button openDataGridViewButton;
     }
 }
-

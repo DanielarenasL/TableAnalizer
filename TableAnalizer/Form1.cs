@@ -19,27 +19,21 @@ using System.Windows.Forms.DataVisualization.Charting;
 namespace TableAnalizer
 {
     public partial class Form1 : Form
-    {   
-        
+    {
         private int totalLotes = 0;
         private int lotesPassed = 0;
         private int lotesFailed = 0;
         private bool state = false;
         private string filePath = string.Empty;
-       
-
-
-
 
         //Constructor 
         public Form1()
         {
-
             //Usar licencia gratuita
             OfficeOpenXml.ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
 
             InitializeComponent();
-            
+
             openFileDialog1 = new OpenFileDialog();         //Crea la funcion para abrir el archivo
 
             this.WindowState = FormWindowState.Maximized;       //Al ejecutar, la ventana siempre esta maximizada
@@ -47,14 +41,11 @@ namespace TableAnalizer
             dataGridView1.CellFormatting += DataGridView_CellFormatting;
             dataGridView2.CellFormatting += DataGridView_CellFormatting;
 
-
             View();
-
         }
 
         private void View()
         {
-
             if (SelectDocument.Visible == Visible)
             {
                 label1.Visible = false;
@@ -66,7 +57,6 @@ namespace TableAnalizer
                 label1.Visible = true;
                 Limpiar.Visible = true;
                 button1.Visible = true;
-
             }
         }
 
@@ -81,31 +71,20 @@ namespace TableAnalizer
             dataGridView2.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
         }
 
-
         //Seleccionar documento
         private void SelectDocument_Click(object sender, EventArgs e)
         {
-            //Evita que se agreguen archivos que no sean ecel
+            //Evita que se agreguen archivos que no sean excel
             openFileDialog1.Filter = "Archivos de Excel (*.xlsx)|*.xlsx";
-
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 filePath = openFileDialog1.FileName;
-                var dataTable = LoadExcelData(filePath, filterColumns: checkBox1.Checked, filterFailed: checkBox1.Checked);
+                var dataTable = LoadExcelData(filePath);
 
-                if (checkBox1.Checked)
-                {
-                    dataGridView2.DataSource = dataTable;
-                    dataGridView2.Visible = true;
-                    dataGridView1.Visible = false;
-                }
-                else
-                {
-                    dataGridView1.DataSource = dataTable;
-                    dataGridView1.Visible = true;
-                    dataGridView2.Visible = false;
-                }
+                dataGridView1.DataSource = dataTable;
+                dataGridView1.Visible = true;
+                dataGridView2.Visible = false;
 
                 CountBatch(dataTable);
             }
@@ -184,19 +163,15 @@ namespace TableAnalizer
             return dataTable;
         }
 
-        
         //Pinta de rojo los que no pasaron
         private void DataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             var dataGridView = sender as DataGridView;
 
-            
             if (dataGridView.Columns[e.ColumnIndex].Name == "Batch Status")
             {
-                
                 if (e.Value != null && e.Value is string valor)
                 {
-                    
                     if (valor == "FAILED")
                     {
                         dataGridView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
@@ -204,8 +179,8 @@ namespace TableAnalizer
                     }
                     else
                     {
-                        e.CellStyle.BackColor = Color.White; 
-                        e.CellStyle.ForeColor = Color.Black; 
+                        e.CellStyle.BackColor = Color.White;
+                        e.CellStyle.ForeColor = Color.Black;
                     }
                 }
             }
@@ -222,8 +197,6 @@ namespace TableAnalizer
                 if (batchValue == "FAILED")
                 {
                     lotesFailed++;
-
-                    
                 }
                 else if (batchValue == "PASSED")
                 {
@@ -235,39 +208,11 @@ namespace TableAnalizer
             double failedPercentage = (100.0 * lotesFailed) / totalLotes;
 
             label1.Text = $"Total: {totalLotes} \n\nPassed: {lotesPassed} ({passedPercentage:F2}%) \n\nFailed: {lotesFailed} ({failedPercentage:F2}%)";
-
-
-            
         }
+
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
-        }
-
-        //Verifica el estado del Checkbox
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(filePath))
-            {
-                var dataTable = LoadExcelData(filePath, filterColumns: checkBox1.Checked, filterFailed: checkBox1.Checked);
-
-                if (checkBox1.Checked)
-                {
-                    dataGridView2.DataSource = dataTable;
-                    dataGridView2.Visible = true;
-                    dataGridView1.Visible = false;
-                }
-                else
-                {
-                    dataGridView1.DataSource = dataTable;
-                    dataGridView1.Visible = true;
-                    dataGridView2.Visible = false;
-                }
-            }
-            else
-            {
-                checkBox1 .Checked = false;
-            }
         }
 
         private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -292,21 +237,12 @@ namespace TableAnalizer
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 filePath = openFileDialog1.FileName;
-                var dataTable = LoadExcelData(filePath, filterColumns: checkBox1.Checked, filterFailed: checkBox1.Checked);
+                var dataTable = LoadExcelData(filePath);
 
                 // Asignar el DataTable al DataGrid correspondiente
-                if (checkBox1.Checked)
-                {
-                    dataGridView2.DataSource = dataTable;
-                    dataGridView2.Visible = true;
-                    dataGridView1.Visible = false;
-                }
-                else
-                {
-                    dataGridView1.DataSource = dataTable;
-                    dataGridView1.Visible = true;
-                    dataGridView2.Visible = false;
-                }
+                dataGridView1.DataSource = dataTable;
+                dataGridView1.Visible = true;
+                dataGridView2.Visible = false;
 
                 // Calcular las estadísticas
                 CountBatch(dataTable);
@@ -315,7 +251,7 @@ namespace TableAnalizer
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var dataTable = (checkBox1.Checked ? dataGridView2 : dataGridView1).DataSource as DataTable;
+            var dataTable = dataGridView1.DataSource as DataTable;
             if (dataTable == null)
             {
                 MessageBox.Show("No hay datos disponibles para mostrar.");
@@ -340,10 +276,10 @@ namespace TableAnalizer
         private void ShowPieCharts(DataTable dataTable, List<string> columnsToShow)
         {
             var panels = new List<Panel>
-    {
-        chartPanel1, chartPanel2, chartPanel3, chartPanel4, chartPanel5, chartPanel6, chartPanel7, chartPanel8,
-        chartPanel9
-    };
+            {
+                chartPanel1, chartPanel2, chartPanel3, chartPanel4, chartPanel5, chartPanel6, chartPanel7, chartPanel8,
+                chartPanel9
+            };
 
             for (int i = 0; i < columnsToShow.Count && i < panels.Count; i++)
             {
@@ -384,6 +320,12 @@ namespace TableAnalizer
             chart.Series.Add(series);
         }
 
-
+        private void openDataGridViewButton_Click(object sender, EventArgs e)
+        {
+            Form2 form2 = new Form2();
+            form2.DataGridView1 = this.dataGridView1;
+            form2.DataGridView2 = this.dataGridView2;
+            form2.Show();
+        }
     }
 }
