@@ -284,64 +284,79 @@ namespace TableAnalizer
             var panels = new List<Panel>
             {
                 chartPanel1, chartPanel2, chartPanel3, chartPanel4, chartPanel5, chartPanel6, chartPanel7, chartPanel8,
-                chartPanel9, chartPanel10, chartPanel11, chartPanel12, chartPanel3, chartPanel4
+                chartPanel9, chartPanel10, chartPanel11, chartPanel12, chartPanel13, chartPanel14
             };
-            Console.WriteLine(page);
+
+            var position1 = new Point(0, 3);
+            var position2 = new Point(401, 3);
+            var position3 = new Point(801, 3);
+            var position4 = new Point(2, 427);
+            var position5 = new Point(401, 427);
+            var defaultPosition = new Point(2000, 2000);
+
+
+
             if (page == 1)
             {
-                chartPanel1.Visible = true;
-                chartPanel2.Visible = true;
-                chartPanel3.Visible = true;
-                chartPanel4.Visible = true;
-                chartPanel5.Visible = true;
-                chartPanel6.Visible = false;
-                chartPanel7.Visible = false;
-                chartPanel8.Visible = false;
-                chartPanel9.Visible = false;
-                chartPanel10.Visible = false;
-                chartPanel11.Visible = false;
-                chartPanel12.Visible = false;
-                chartPanel13.Visible = false;
-                chartPanel14.Visible = false;
-            }else if(page == 2)
-            {
-                chartPanel1.Visible = false;
-                chartPanel2.Visible = false;
-                chartPanel3.Visible = false;
-                chartPanel4.Visible = false;
-                chartPanel5.Visible = false;
-                chartPanel6.Visible = true;
-                chartPanel7.Visible = true;
-                chartPanel8.Visible = true;
-                chartPanel9.Visible = true;
-                chartPanel10.Visible = true;
-                chartPanel11.Visible = false;
-                chartPanel12.Visible = false;
-                chartPanel13.Visible = false;
-                chartPanel14.Visible = false;
-            }else
-            {
-                chartPanel1.Visible = false;
-                chartPanel2.Visible = false;
-                chartPanel3.Visible = false;
-                chartPanel4.Visible = false;
-                chartPanel5.Visible = false;
-                chartPanel6.Visible = false;
-                chartPanel7.Visible = false;
-                chartPanel8.Visible = false;
-                chartPanel9.Visible = false;
-                chartPanel11.Visible = true;
-                chartPanel12.Visible = true;
-                chartPanel13.Visible = true;
-                chartPanel14.Visible = true;
-            }
+                chartPanel1.Location = position1;
+                chartPanel2.Location = position2;
+                chartPanel3.Location = position3;
+                chartPanel4.Location = position4;
+                chartPanel5.Location = position5;
+                chartPanel6.Location = defaultPosition;
+                chartPanel7.Location = defaultPosition;
+                chartPanel8.Location = defaultPosition;
+                chartPanel9.Location = defaultPosition;
+                chartPanel10.Location = defaultPosition;
+                chartPanel11.Location = defaultPosition;
+                chartPanel12.Location = defaultPosition;
+                chartPanel13.Location = defaultPosition;
+                chartPanel14.Location = defaultPosition;
 
+
+            }
+            else if(page == 2)
+            {
+                chartPanel1.Location = defaultPosition;
+                chartPanel2.Location = defaultPosition;
+                chartPanel3.Location = defaultPosition;
+                chartPanel4.Location = defaultPosition;
+                chartPanel5.Location = defaultPosition;
+                chartPanel6.Location = position1;
+                chartPanel7.Location = position2;
+                chartPanel8.Location = position3;
+                chartPanel9.Location = position4;
+                chartPanel10.Location = position5;
+                chartPanel11.Location = defaultPosition;
+                chartPanel12.Location = defaultPosition;
+                chartPanel13.Location = defaultPosition;
+                chartPanel14.Location = defaultPosition;
+            }
+            else
+            {
+                chartPanel1.Location = defaultPosition;
+                chartPanel2.Location = defaultPosition;
+                chartPanel3.Location = defaultPosition;
+                chartPanel4.Location = defaultPosition;
+                chartPanel5.Location = defaultPosition;
+                chartPanel6.Location = defaultPosition;
+                chartPanel7.Location = defaultPosition;
+                chartPanel8.Location = defaultPosition;
+                chartPanel9.Location = defaultPosition;
+                chartPanel10.Location = defaultPosition;
+                chartPanel11.Location = position1;
+                chartPanel12.Location = position2;
+                chartPanel13.Location = position3;
+                chartPanel14.Location = position4;
+            }
 
             foreach (var panel in panels)
             {
-                //panel.Controls.Clear(); // Limpiar el contenido del panel
-
+                panel.Controls.Clear(); // Limpiar el contenido del panel
+                panel.Size = new System.Drawing.Size(410, 430);
+                panel.BringToFront();
             }
+
 
             for (int i = 0; i < columnsToShow.Count && i < panels.Count; i++)
             {

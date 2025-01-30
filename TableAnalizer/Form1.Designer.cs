@@ -41,8 +41,6 @@
             this.chartPanel12 = new System.Windows.Forms.Panel();
             this.chartPanel13 = new System.Windows.Forms.Panel();
             this.chartPanel14 = new System.Windows.Forms.Panel();
-            this.chartPanel4.SuspendLayout();
-            this.chartPanel7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -104,68 +102,63 @@
             // 
             // chartPanel1
             // 
-            this.chartPanel1.Location = new System.Drawing.Point(2, 3);
+            this.chartPanel1.Location = new System.Drawing.Point(380, 55);
             this.chartPanel1.Name = "chartPanel1";
-            this.chartPanel1.Size = new System.Drawing.Size(393, 418);
+            this.chartPanel1.Size = new System.Drawing.Size(117, 52);
             this.chartPanel1.TabIndex = 11;
             // 
             // chartPanel2
             // 
-            this.chartPanel2.Location = new System.Drawing.Point(401, 3);
+            this.chartPanel2.Location = new System.Drawing.Point(529, 55);
             this.chartPanel2.Name = "chartPanel2";
-            this.chartPanel2.Size = new System.Drawing.Size(385, 418);
+            this.chartPanel2.Size = new System.Drawing.Size(163, 65);
             this.chartPanel2.TabIndex = 12;
             // 
             // chartPanel3
             // 
-            this.chartPanel3.Location = new System.Drawing.Point(792, 3);
+            this.chartPanel3.Location = new System.Drawing.Point(631, 248);
             this.chartPanel3.Name = "chartPanel3";
-            this.chartPanel3.Size = new System.Drawing.Size(489, 418);
+            this.chartPanel3.Size = new System.Drawing.Size(121, 89);
             this.chartPanel3.TabIndex = 12;
             // 
             // chartPanel4
             // 
-            this.chartPanel4.Controls.Add(this.chartPanel13);
-            this.chartPanel4.Controls.Add(this.chartPanel12);
-            this.chartPanel4.Controls.Add(this.chartPanel11);
-            this.chartPanel4.Controls.Add(this.chartPanel10);
-            this.chartPanel4.Location = new System.Drawing.Point(2, 427);
+            this.chartPanel4.Location = new System.Drawing.Point(12, 225);
             this.chartPanel4.Name = "chartPanel4";
-            this.chartPanel4.Size = new System.Drawing.Size(393, 412);
+            this.chartPanel4.Size = new System.Drawing.Size(128, 101);
             this.chartPanel4.TabIndex = 12;
             // 
             // chartPanel7
             // 
-            this.chartPanel7.Controls.Add(this.chartPanel8);
-            this.chartPanel7.Location = new System.Drawing.Point(744, 596);
+            this.chartPanel7.Location = new System.Drawing.Point(190, 225);
             this.chartPanel7.Name = "chartPanel7";
-            this.chartPanel7.Size = new System.Drawing.Size(200, 100);
+            this.chartPanel7.Size = new System.Drawing.Size(142, 73);
             this.chartPanel7.TabIndex = 15;
             // 
             // chartPanel8
             // 
-            this.chartPanel8.Location = new System.Drawing.Point(104, 0);
+            this.chartPanel8.Location = new System.Drawing.Point(401, 165);
             this.chartPanel8.Name = "chartPanel8";
-            this.chartPanel8.Size = new System.Drawing.Size(200, 100);
+            this.chartPanel8.Size = new System.Drawing.Size(210, 84);
             this.chartPanel8.TabIndex = 16;
             // 
             // chartPanel5
             // 
-            this.chartPanel5.Location = new System.Drawing.Point(401, 427);
+            this.chartPanel5.Location = new System.Drawing.Point(499, 465);
             this.chartPanel5.Name = "chartPanel5";
-            this.chartPanel5.Size = new System.Drawing.Size(385, 412);
+            this.chartPanel5.Size = new System.Drawing.Size(159, 135);
             this.chartPanel5.TabIndex = 17;
             // 
             // chartPanel6
             // 
-            this.chartPanel6.Location = new System.Drawing.Point(375, 592);
+            this.chartPanel6.Location = new System.Drawing.Point(833, 55);
             this.chartPanel6.Name = "chartPanel6";
-            this.chartPanel6.Size = new System.Drawing.Size(200, 100);
+            this.chartPanel6.Size = new System.Drawing.Size(53, 104);
             this.chartPanel6.TabIndex = 17;
             // 
             // openDataGridViewButton
             // 
-            this.openDataGridViewButton.Location = new System.Drawing.Point(293, 748);
+            this.openDataGridViewButton.Location = new System.Drawing.Point(944, 888);
             this.openDataGridViewButton.Name = "openDataGridViewButton";
             this.openDataGridViewButton.Size = new System.Drawing.Size(117, 65);
             this.openDataGridViewButton.TabIndex = 19;
@@ -175,9 +168,9 @@
             // 
             // chartPanel9
             // 
-            this.chartPanel9.Location = new System.Drawing.Point(705, 592);
+            this.chartPanel9.Location = new System.Drawing.Point(348, 409);
             this.chartPanel9.Name = "chartPanel9";
-            this.chartPanel9.Size = new System.Drawing.Size(200, 100);
+            this.chartPanel9.Size = new System.Drawing.Size(48, 113);
             this.chartPanel9.TabIndex = 12;
             // 
             // dataGridView2
@@ -220,37 +213,37 @@
             // 
             // chartPanel10
             // 
-            this.chartPanel10.Location = new System.Drawing.Point(142, 16);
+            this.chartPanel10.Location = new System.Drawing.Point(900, 315);
             this.chartPanel10.Name = "chartPanel10";
             this.chartPanel10.Size = new System.Drawing.Size(200, 100);
             this.chartPanel10.TabIndex = 18;
             // 
             // chartPanel11
             // 
-            this.chartPanel11.Location = new System.Drawing.Point(142, 122);
+            this.chartPanel11.Location = new System.Drawing.Point(601, 776);
             this.chartPanel11.Name = "chartPanel11";
             this.chartPanel11.Size = new System.Drawing.Size(200, 100);
             this.chartPanel11.TabIndex = 18;
             // 
             // chartPanel12
             // 
-            this.chartPanel12.Location = new System.Drawing.Point(142, 228);
+            this.chartPanel12.Location = new System.Drawing.Point(68, 697);
             this.chartPanel12.Name = "chartPanel12";
             this.chartPanel12.Size = new System.Drawing.Size(200, 100);
             this.chartPanel12.TabIndex = 18;
             // 
             // chartPanel13
             // 
-            this.chartPanel13.Location = new System.Drawing.Point(142, 334);
+            this.chartPanel13.Location = new System.Drawing.Point(1167, 422);
             this.chartPanel13.Name = "chartPanel13";
             this.chartPanel13.Size = new System.Drawing.Size(200, 100);
             this.chartPanel13.TabIndex = 18;
             // 
             // chartPanel14
             // 
-            this.chartPanel14.Location = new System.Drawing.Point(141, 862);
+            this.chartPanel14.Location = new System.Drawing.Point(112, 970);
             this.chartPanel14.Name = "chartPanel14";
-            this.chartPanel14.Size = new System.Drawing.Size(200, 100);
+            this.chartPanel14.Size = new System.Drawing.Size(134, 100);
             this.chartPanel14.TabIndex = 18;
             // 
             // Form1
@@ -258,18 +251,23 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1216, 974);
+            this.Controls.Add(this.chartPanel11);
+            this.Controls.Add(this.chartPanel10);
+            this.Controls.Add(this.chartPanel9);
+            this.Controls.Add(this.chartPanel8);
+            this.Controls.Add(this.chartPanel1);
+            this.Controls.Add(this.chartPanel6);
+            this.Controls.Add(this.chartPanel12);
+            this.Controls.Add(this.chartPanel13);
             this.Controls.Add(this.chartPanel14);
             this.Controls.Add(this.Back);
             this.Controls.Add(this.Next);
-            this.Controls.Add(this.chartPanel9);
             this.Controls.Add(this.chartPanel3);
             this.Controls.Add(this.chartPanel2);
             this.Controls.Add(this.openDataGridViewButton);
-            this.Controls.Add(this.chartPanel6);
             this.Controls.Add(this.chartPanel5);
             this.Controls.Add(this.chartPanel7);
             this.Controls.Add(this.chartPanel4);
-            this.Controls.Add(this.chartPanel1);
             this.Controls.Add(this.Limpiar);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label1);
@@ -281,8 +279,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.chartPanel4.ResumeLayout(false);
-            this.chartPanel7.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
