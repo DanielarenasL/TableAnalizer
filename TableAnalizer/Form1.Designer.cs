@@ -146,7 +146,7 @@
             // 
             this.chartPanel5.Location = new System.Drawing.Point(499, 465);
             this.chartPanel5.Name = "chartPanel5";
-            this.chartPanel5.Size = new System.Drawing.Size(159, 135);
+            this.chartPanel5.Size = new System.Drawing.Size(170, 135);
             this.chartPanel5.TabIndex = 17;
             // 
             // chartPanel6
@@ -158,7 +158,7 @@
             // 
             // openDataGridViewButton
             // 
-            this.openDataGridViewButton.Location = new System.Drawing.Point(944, 888);
+            this.openDataGridViewButton.Location = new System.Drawing.Point(1002, 465);
             this.openDataGridViewButton.Name = "openDataGridViewButton";
             this.openDataGridViewButton.Size = new System.Drawing.Size(117, 65);
             this.openDataGridViewButton.TabIndex = 19;
@@ -193,7 +193,7 @@
             // 
             // Next
             // 
-            this.Next.Location = new System.Drawing.Point(545, 886);
+            this.Next.Location = new System.Drawing.Point(991, 886);
             this.Next.Name = "Next";
             this.Next.Size = new System.Drawing.Size(168, 67);
             this.Next.TabIndex = 20;
@@ -203,7 +203,7 @@
             // 
             // Back
             // 
-            this.Back.Location = new System.Drawing.Point(309, 886);
+            this.Back.Location = new System.Drawing.Point(801, 886);
             this.Back.Name = "Back";
             this.Back.Size = new System.Drawing.Size(168, 67);
             this.Back.TabIndex = 21;

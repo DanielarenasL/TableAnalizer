@@ -294,7 +294,7 @@ namespace TableAnalizer
             var position5 = new Point(401, 427);
             var defaultPosition = new Point(2000, 2000);
 
-
+            
 
             if (page == 1)
             {
@@ -353,11 +353,9 @@ namespace TableAnalizer
             foreach (var panel in panels)
             {
                 panel.Controls.Clear(); // Limpiar el contenido del panel
-                panel.Size = new System.Drawing.Size(410, 430);
+                panel.Size = new System.Drawing.Size(410, 440);
                 panel.BringToFront();
             }
-
-
             for (int i = 0; i < columnsToShow.Count && i < panels.Count; i++)
             {
                 var columnName = columnsToShow[i];
@@ -374,15 +372,19 @@ namespace TableAnalizer
             }
         }
 
+
+
         private void UpdateChart(DataTable dataTable, string columnName, Chart chart)
         {
             chart.Series.Clear();
+            chart.Legends.Clear();  // Clear any existing legends
+            chart.Legends.Add(new Legend("Legend"));  // Add a new legend
 
             var series = new Series
             {
                 ChartType = SeriesChartType.Pie,
                 IsValueShownAsLabel = true,
-                Label = "#VALX (#PERCENT{P0})" // Mostrar nombre y porcentaje
+                Label = "#PERCENT{P0}" // Mostrar nombre y porcentaje
             };
 
             var data = dataTable.AsEnumerable()
@@ -393,11 +395,81 @@ namespace TableAnalizer
 
             foreach (var item in data)
             {
-                series.Points.AddXY(item.Value, item.Count);
+                var point = new DataPoint
+                {
+                    AxisLabel = item.Value,
+                    YValues = new double[] { item.Count }
+                };
+                series.Points.Add(point);
             }
 
             chart.Series.Add(series);
+
+            // Customize the legend
+            foreach (var point in series.Points)
+            {
+                point.LegendText = $"{point.AxisLabel}";  // Set the legend text to the axis label
+            }
+            
+            var legend = chart.Legends["Legend"];
+            legend.Docking = Docking.Bottom; // Position the legend on the right
+            legend.AutoFitMinFontSize = 5; // Set minimum font size to auto fit
+            legend.Font = new Font("Arial", 8); // Adjust the font size to make it smaller
+            legend.IsTextAutoFit = true; // Enable auto fit for text
+
+            // Adjust the chart area to make the pie chart larger and 3D
+            var chartArea = new ChartArea();
+            chart.ChartAreas.Clear();
+            chart.ChartAreas.Add(chartArea);
+            chartArea.Area3DStyle.Enable3D = true; // Enable 3D
+            chartArea.Position = new ElementPosition(0, 0, 100, 100); // Adjust the position and size
+            chartArea.InnerPlotPosition = new ElementPosition(10, 10, 80, 80); // Adjust the inner plot position
         }
+        //private void UpdateChart(DataTable dataTable, string columnName, Chart chart)
+        //{
+        //    chart.Series.Clear();
+
+        //    var series = new Series
+        //    {
+        //        ChartType = SeriesChartType.Pie,
+        //        IsValueShownAsLabel = false // No mostrar directamente el valor
+        //    };
+
+        //    var data = dataTable.AsEnumerable()
+        //        .Where(row => !row.IsNull(columnName))
+        //        .GroupBy(row => row[columnName].ToString())
+        //        .Select(group => new { Value = group.Key, Count = group.Count() })
+        //        .ToList();
+
+        //    foreach (var item in data)
+        //    {
+        //        var point = new DataPoint
+        //        {
+        //            AxisLabel = item.Value,
+        //            YValues = new double[] { item.Count },
+        //            Label = $"{item.Value} ({item.Count} - {((double)item.Count / dataTable.Rows.Count):P0})" // Configurar el texto de la etiqueta
+        //        };
+
+        //        series.Points.Add(point);
+        //    }
+
+        //    chart.Series.Add(series);
+
+        //    // Configurar las etiquetas con líneas de conexión
+        //    foreach (var point in series.Points)
+        //    {
+        //        point.Font = new Font("Arial", 10, FontStyle.Bold);
+        //        point.LabelForeColor = Color.Black;
+        //        point.LabelBorderColor = Color.Black;
+        //        point.LabelBorderWidth = 1;
+        //        point.LabelBorderDashStyle = ChartDashStyle.Solid;
+        //        point.LabelBackColor = Color.White;
+        //        point.CustomProperties = "PieLineColor=Black, PieDrawingStyle=SoftEdge";
+        //    }
+
+        //    chart.ChartAreas[0].Area3DStyle.Enable3D = true; // Habilitar 3D para una mejor visualización (opcional)
+        //}
+
 
         private void openDataGridViewButton_Click(object sender, EventArgs e)
         {
