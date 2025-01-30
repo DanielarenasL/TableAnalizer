@@ -25,6 +25,7 @@ namespace TableAnalizer
         private int lotesFailed = 0;
         private bool state = false;
         private string filePath = string.Empty;
+        private int page = 1;
 
         //Constructor 
         public Form1()
@@ -40,6 +41,9 @@ namespace TableAnalizer
 
             dataGridView1.CellFormatting += DataGridView_CellFormatting;
             dataGridView2.CellFormatting += DataGridView_CellFormatting;
+            dataGridView1.Visible = false;
+            dataGridView2.Visible = false;
+
 
             View();
         }
@@ -50,13 +54,11 @@ namespace TableAnalizer
             {
                 label1.Visible = false;
                 Limpiar.Visible = false;
-                button1.Visible = false;
             }
             else
             {
                 label1.Visible = true;
                 Limpiar.Visible = true;
-                button1.Visible = true;
             }
         }
 
@@ -71,10 +73,11 @@ namespace TableAnalizer
             dataGridView2.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
         }
 
+
         //Seleccionar documento
         private void SelectDocument_Click(object sender, EventArgs e)
         {
-            //Evita que se agreguen archivos que no sean excel
+            // Evita que se agreguen archivos que no sean excel
             openFileDialog1.Filter = "Archivos de Excel (*.xlsx)|*.xlsx";
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -83,11 +86,33 @@ namespace TableAnalizer
                 var dataTable = LoadExcelData(filePath);
 
                 dataGridView1.DataSource = dataTable;
-                dataGridView1.Visible = true;
+                dataGridView1.Visible = false;
                 dataGridView2.Visible = false;
 
                 CountBatch(dataTable);
+
+                ShowGraphics();
             }
+        }
+        private void ShowGraphics()
+        {
+            var dataTable = LoadExcelData(filePath);
+
+
+            // Filtrar las filas donde el Batch Status sea "FAILED"
+            var failedDataTable = dataTable.AsEnumerable()
+                .Where(row => row["Batch Status"].ToString() == "FAILED")
+                .CopyToDataTable();
+
+            var columnsToShow = new List<string>
+            {
+                "Shade Name", "Max Colour Diff", "Substr Code", "Count/Ply",
+                "Fibre Type", "Dyeing Method", "Recipe Status", "Machine Name", "Machine Vol",
+                "Failure Reason", "Dyeclass(es)", "Worker", "Article", "Material Code"
+            };
+
+            ShowPieCharts(failedDataTable, columnsToShow);
+            
         }
 
         private System.Data.DataTable LoadExcelData(string filePath, bool filterColumns = false, bool filterFailed = false)
@@ -246,40 +271,77 @@ namespace TableAnalizer
 
                 // Calcular las estadísticas
                 CountBatch(dataTable);
+
+                // Regenerar las gráficas
+                ShowGraphics();
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            var dataTable = dataGridView1.DataSource as DataTable;
-            if (dataTable == null)
-            {
-                MessageBox.Show("No hay datos disponibles para mostrar.");
-                return;
-            }
 
-            // Filtrar las filas donde el Batch Status sea "FAILED"
-            var failedDataTable = dataTable.AsEnumerable()
-                .Where(row => row["Batch Status"].ToString() == "FAILED")
-                .CopyToDataTable();
 
-            var columnsToShow = new List<string>
-            {
-                "Batch Id", "Dyelot Date", "Shade Name", "Max Colour Diff", "Substr Code", "Batch Status", "Count/Ply",
-                "Fibre Type", "Dyeing Method", "Recipe Status", "Delta L", "Delta c", "Delta h", "Machine Name", "Machine Vol",
-                "Failure Reason", "Dyeclass(es)", "Worker", "Article", "Material Code"
-            };
-
-            ShowPieCharts(failedDataTable, columnsToShow);
-        }
-
-        private void ShowPieCharts(DataTable dataTable, List<string> columnsToShow)
+        private void ShowPieCharts(DataTable dataTable, List<string> columnsToShow )
         {
             var panels = new List<Panel>
             {
                 chartPanel1, chartPanel2, chartPanel3, chartPanel4, chartPanel5, chartPanel6, chartPanel7, chartPanel8,
-                chartPanel9
+                chartPanel9, chartPanel10, chartPanel11, chartPanel12, chartPanel3, chartPanel4
             };
+            Console.WriteLine(page);
+            if (page == 1)
+            {
+                chartPanel1.Visible = true;
+                chartPanel2.Visible = true;
+                chartPanel3.Visible = true;
+                chartPanel4.Visible = true;
+                chartPanel5.Visible = true;
+                chartPanel6.Visible = false;
+                chartPanel7.Visible = false;
+                chartPanel8.Visible = false;
+                chartPanel9.Visible = false;
+                chartPanel10.Visible = false;
+                chartPanel11.Visible = false;
+                chartPanel12.Visible = false;
+                chartPanel13.Visible = false;
+                chartPanel14.Visible = false;
+            }else if(page == 2)
+            {
+                chartPanel1.Visible = false;
+                chartPanel2.Visible = false;
+                chartPanel3.Visible = false;
+                chartPanel4.Visible = false;
+                chartPanel5.Visible = false;
+                chartPanel6.Visible = true;
+                chartPanel7.Visible = true;
+                chartPanel8.Visible = true;
+                chartPanel9.Visible = true;
+                chartPanel10.Visible = true;
+                chartPanel11.Visible = false;
+                chartPanel12.Visible = false;
+                chartPanel13.Visible = false;
+                chartPanel14.Visible = false;
+            }else
+            {
+                chartPanel1.Visible = false;
+                chartPanel2.Visible = false;
+                chartPanel3.Visible = false;
+                chartPanel4.Visible = false;
+                chartPanel5.Visible = false;
+                chartPanel6.Visible = false;
+                chartPanel7.Visible = false;
+                chartPanel8.Visible = false;
+                chartPanel9.Visible = false;
+                chartPanel11.Visible = true;
+                chartPanel12.Visible = true;
+                chartPanel13.Visible = true;
+                chartPanel14.Visible = true;
+            }
+
+
+            foreach (var panel in panels)
+            {
+                //panel.Controls.Clear(); // Limpiar el contenido del panel
+
+            }
 
             for (int i = 0; i < columnsToShow.Count && i < panels.Count; i++)
             {
@@ -288,7 +350,9 @@ namespace TableAnalizer
                 chart.Dock = DockStyle.Fill;
                 chart.ChartAreas.Add(new ChartArea());
 
-                panels[i].Controls.Clear(); // Limpiar el contenido del panel
+                // Agregar el título del gráfico
+                chart.Titles.Add(columnName);
+
                 panels[i].Controls.Add(chart);
 
                 UpdateChart(dataTable, columnName, chart);
@@ -326,6 +390,27 @@ namespace TableAnalizer
             form2.DataGridView1 = this.dataGridView1;
             form2.DataGridView2 = this.dataGridView2;
             form2.Show();
+
+        }
+
+        private void Next_Click(object sender, EventArgs e)
+        {
+            if (page <= 2)
+            {
+                page++;
+                ShowGraphics();
+
+            }
+        }
+
+        private void Back_Click(object sender, EventArgs e)
+        {
+            if (page >= 2 )
+            {
+                page--;
+                ShowGraphics();
+
+            }
         }
     }
 }
