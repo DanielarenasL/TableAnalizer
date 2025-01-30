@@ -403,72 +403,76 @@ namespace TableAnalizer
                 series.Points.Add(point);
             }
 
+            // Customize the color palette to include 15 tones
+            var pastelColors = new List<Color>
+            {
+                Color.FromArgb(255, 105, 97),   // Darker Pastel Pink
+                Color.FromArgb(255, 179, 71),   // Darker Pastel Orange
+                Color.FromArgb(253, 253, 150),  // Darker Pastel Yellow
+                Color.FromArgb(119, 221, 119),  // Darker Pastel Green
+                Color.FromArgb(119, 158, 203),  // Darker Pastel Blue
+                Color.FromArgb(204, 153, 255),  // Darker Pastel Purple
+                Color.FromArgb(255, 204, 204),  // Darker Pastel Peach
+                Color.FromArgb(255, 255, 204),  // Darker Pastel Lemon
+                Color.FromArgb(204, 255, 204),  // Darker Pastel Mint
+                Color.FromArgb(204, 229, 255),  // Darker Pastel Sky Blue
+                Color.FromArgb(255, 204, 229),  // Darker Pastel Magenta
+                Color.FromArgb(255, 229, 204),  // Darker Pastel Coral
+                Color.FromArgb(229, 204, 255),  // Darker Pastel Lavender
+                Color.FromArgb(204, 255, 229),  // Darker Pastel Aqua
+                Color.FromArgb(255, 255, 229)   // Darker Pastel Cream
+            };
+
+            for (int i = 0; i < series.Points.Count; i++)
+            {
+                series.Points[i].Color = pastelColors[i % pastelColors.Count]; // Assign pastel colors from the custom palette
+            }
+
             chart.Series.Add(series);
 
-            // Customize the legend
+            // Customize the legend and data point labels
             foreach (var point in series.Points)
             {
-                point.LegendText = $"{point.AxisLabel}";  // Set the legend text to the axis label
+                double percentage = (point.YValues[0] / dataTable.Rows.Count) * 100;
+                if (columnName == "Max Colour Diff" || columnName == "Substr Code" 
+                    || columnName == "Count/Ply" || columnName == "Fibre Type" || columnName == "Dyeing Method"  || columnName == "Machine Vol"
+                    )
+                {
+                    // Show the name and percentage on the data point
+                    point.Label = $"{point.AxisLabel} {percentage:F0}%";
+                    var chartArea = new ChartArea();
+                    chart.ChartAreas.Clear();
+                    chart.Legends.Clear();
+                    chart.ChartAreas.Add(chartArea);
+                    chartArea.Area3DStyle.Enable3D = true; // Enable 3D
+                    chartArea.Position = new ElementPosition(0, 0, 100, 100); // Adjust the position and size
+                    chartArea.InnerPlotPosition = new ElementPosition(10, 10, 85, 85); // Adjust the inner plot position
+                }
+                else
+                {
+                    // Show the name and percentage in the legend
+                    point.LegendText = $"{point.AxisLabel} ";  // Set the legend text to the axis label
+                    var legend = chart.Legends["Legend"];
+                    legend.Docking = Docking.Bottom; // Position the legend on the right
+                    legend.AutoFitMinFontSize = 5; // Set minimum font size to auto fit
+                    legend.Font = new Font("Arial", 8); // Adjust the font size to make it smaller
+                    legend.IsTextAutoFit = true; // Enable auto fit for text
+
+                    // Adjust the chart area to make the pie chart larger and 3D
+                    var chartArea = new ChartArea();
+                    chart.ChartAreas.Clear();
+                    chart.ChartAreas.Add(chartArea);
+                    chartArea.Area3DStyle.Enable3D = true; // Enable 3D
+                    chartArea.Position = new ElementPosition(0, 0, 80, 80); // Adjust the position and size
+                    chartArea.InnerPlotPosition = new ElementPosition(10, 10, 80, 80); // Adjust the inner plot position
+                }
             }
+
             
-            var legend = chart.Legends["Legend"];
-            legend.Docking = Docking.Bottom; // Position the legend on the right
-            legend.AutoFitMinFontSize = 5; // Set minimum font size to auto fit
-            legend.Font = new Font("Arial", 8); // Adjust the font size to make it smaller
-            legend.IsTextAutoFit = true; // Enable auto fit for text
 
-            // Adjust the chart area to make the pie chart larger and 3D
-            var chartArea = new ChartArea();
-            chart.ChartAreas.Clear();
-            chart.ChartAreas.Add(chartArea);
-            chartArea.Area3DStyle.Enable3D = true; // Enable 3D
-            chartArea.Position = new ElementPosition(0, 0, 100, 100); // Adjust the position and size
-            chartArea.InnerPlotPosition = new ElementPosition(10, 10, 80, 80); // Adjust the inner plot position
+            
         }
-        //private void UpdateChart(DataTable dataTable, string columnName, Chart chart)
-        //{
-        //    chart.Series.Clear();
 
-        //    var series = new Series
-        //    {
-        //        ChartType = SeriesChartType.Pie,
-        //        IsValueShownAsLabel = false // No mostrar directamente el valor
-        //    };
-
-        //    var data = dataTable.AsEnumerable()
-        //        .Where(row => !row.IsNull(columnName))
-        //        .GroupBy(row => row[columnName].ToString())
-        //        .Select(group => new { Value = group.Key, Count = group.Count() })
-        //        .ToList();
-
-        //    foreach (var item in data)
-        //    {
-        //        var point = new DataPoint
-        //        {
-        //            AxisLabel = item.Value,
-        //            YValues = new double[] { item.Count },
-        //            Label = $"{item.Value} ({item.Count} - {((double)item.Count / dataTable.Rows.Count):P0})" // Configurar el texto de la etiqueta
-        //        };
-
-        //        series.Points.Add(point);
-        //    }
-
-        //    chart.Series.Add(series);
-
-        //    // Configurar las etiquetas con líneas de conexión
-        //    foreach (var point in series.Points)
-        //    {
-        //        point.Font = new Font("Arial", 10, FontStyle.Bold);
-        //        point.LabelForeColor = Color.Black;
-        //        point.LabelBorderColor = Color.Black;
-        //        point.LabelBorderWidth = 1;
-        //        point.LabelBorderDashStyle = ChartDashStyle.Solid;
-        //        point.LabelBackColor = Color.White;
-        //        point.CustomProperties = "PieLineColor=Black, PieDrawingStyle=SoftEdge";
-        //    }
-
-        //    chart.ChartAreas[0].Area3DStyle.Enable3D = true; // Habilitar 3D para una mejor visualización (opcional)
-        //}
 
 
         private void openDataGridViewButton_Click(object sender, EventArgs e)
