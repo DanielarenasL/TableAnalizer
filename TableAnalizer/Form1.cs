@@ -54,11 +54,15 @@ namespace TableAnalizer
             {
                 label1.Visible = false;
                 Limpiar.Visible = false;
+                Next.Visible = false;
+                Back.Visible = false;
             }
             else
             {
                 label1.Visible = true;
                 Limpiar.Visible = true;
+                Next.Visible = true;
+                Back.Visible = true;
             }
         }
 
@@ -393,39 +397,47 @@ namespace TableAnalizer
                 .Select(group => new { Value = group.Key, Count = group.Count() })
                 .ToList();
 
-            foreach (var item in data)
-            {
-                var point = new DataPoint
-                {
-                    AxisLabel = item.Value,
-                    YValues = new double[] { item.Count }
-                };
-                series.Points.Add(point);
-            }
+            double maxPercentage = data.Max(item => (item.Count / (double)dataTable.Rows.Count) * 100);
+            bool allEqual = data.All(d => (d.Count / (double)dataTable.Rows.Count) * 100 == maxPercentage);
 
             // Customize the color palette to include 15 tones
             var pastelColors = new List<Color>
-            {
-                Color.FromArgb(255, 105, 97),   // Darker Pastel Pink
-                Color.FromArgb(255, 179, 71),   // Darker Pastel Orange
-                Color.FromArgb(253, 253, 150),  // Darker Pastel Yellow
-                Color.FromArgb(119, 221, 119),  // Darker Pastel Green
-                Color.FromArgb(119, 158, 203),  // Darker Pastel Blue
-                Color.FromArgb(204, 153, 255),  // Darker Pastel Purple
-                Color.FromArgb(255, 204, 204),  // Darker Pastel Peach
-                Color.FromArgb(255, 255, 204),  // Darker Pastel Lemon
-                Color.FromArgb(204, 255, 204),  // Darker Pastel Mint
-                Color.FromArgb(204, 229, 255),  // Darker Pastel Sky Blue
-                Color.FromArgb(255, 204, 229),  // Darker Pastel Magenta
-                Color.FromArgb(255, 229, 204),  // Darker Pastel Coral
-                Color.FromArgb(229, 204, 255),  // Darker Pastel Lavender
-                Color.FromArgb(204, 255, 229),  // Darker Pastel Aqua
-                Color.FromArgb(255, 255, 229)   // Darker Pastel Cream
-            };
+    {
+        Color.FromArgb(255, 105, 97),   // Darker Pastel Pink
+        Color.FromArgb(255, 179, 71),   // Darker Pastel Orange
+        Color.FromArgb(253, 253, 150),  // Darker Pastel Yellow
+        Color.FromArgb(119, 221, 119),  // Darker Pastel Green
+        Color.FromArgb(119, 158, 203),  // Darker Pastel Blue
+        Color.FromArgb(204, 153, 255),  // Darker Pastel Purple
+        Color.FromArgb(255, 204, 204),  // Darker Pastel Peach
+        Color.FromArgb(255, 255, 204),  // Darker Pastel Lemon
+        Color.FromArgb(204, 255, 204),  // Darker Pastel Mint
+        Color.FromArgb(204, 229, 255),  // Darker Pastel Sky Blue
+        Color.FromArgb(255, 204, 229),  // Darker Pastel Magenta
+        Color.FromArgb(255, 229, 204),  // Darker Pastel Coral
+        Color.FromArgb(229, 204, 255),  // Darker Pastel Lavender
+        Color.FromArgb(204, 255, 229),  // Darker Pastel Aqua
+        Color.FromArgb(255, 255, 229)   // Darker Pastel Cream
+    };
 
-            for (int i = 0; i < series.Points.Count; i++)
+            for (int i = 0; i < data.Count; i++)
             {
-                series.Points[i].Color = pastelColors[i % pastelColors.Count]; // Assign pastel colors from the custom palette
+                var item = data[i];
+                var point = new DataPoint
+                {
+                    AxisLabel = item.Value,
+                    YValues = new double[] { item.Count },
+                    Color = pastelColors[i % pastelColors.Count]
+                };
+
+                double percentage = (item.Count / (double)dataTable.Rows.Count) * 100;
+                if (!allEqual && percentage == maxPercentage)
+                {
+                    point["Exploded"] = "true"; // Separar el sector con mayor porcentaje
+                    point.Color = Color.FromArgb(135, 206, 250); // Color verde fluorescente
+                }
+
+                series.Points.Add(point);
             }
 
             chart.Series.Add(series);
@@ -434,9 +446,8 @@ namespace TableAnalizer
             foreach (var point in series.Points)
             {
                 double percentage = (point.YValues[0] / dataTable.Rows.Count) * 100;
-                if (columnName == "Max Colour Diff" || columnName == "Substr Code" 
-                    || columnName == "Count/Ply" || columnName == "Fibre Type" || columnName == "Dyeing Method"  || columnName == "Machine Vol"
-                    )
+                if (columnName == "Max Colour Diff" || columnName == "Substr Code"
+                    || columnName == "Count/Ply" || columnName == "Fibre Type" || columnName == "Dyeing Method" || columnName == "Machine Vol")
                 {
                     // Show the name and percentage on the data point
                     point.Label = $"{point.AxisLabel} {percentage:F0}%";
@@ -467,10 +478,6 @@ namespace TableAnalizer
                     chartArea.InnerPlotPosition = new ElementPosition(10, 10, 80, 80); // Adjust the inner plot position
                 }
             }
-
-            
-
-            
         }
 
 
