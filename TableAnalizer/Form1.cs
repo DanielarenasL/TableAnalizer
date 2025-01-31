@@ -506,6 +506,7 @@ namespace TableAnalizer
 
         private void openDataGridViewButton_Click(object sender, EventArgs e)
         {
+
             Form2 form2 = new Form2(this);
             form2.DataGridView1 = this.dataGridView1;
             form2.DataGridView2 = this.dataGridView2;

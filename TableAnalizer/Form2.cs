@@ -19,13 +19,13 @@ namespace TableAnalizer
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            DataGridView1.Visible = true;
-
             if (DataGridView1 != null)
             {
                 this.Controls.Add(DataGridView1);
                 DataGridView1.Dock = DockStyle.Top;
                 DataGridView1.Size = new System.Drawing.Size(318, 800);
+                DataGridView1.Visible = true; // Asegurarse de que DataGridView1 esté visible
+                DataGridView1.DataSource = form1Instance.LoadExcelData(form1Instance.FilePath); // Cargar datos
             }
 
             if (DataGridView2 != null)
@@ -33,16 +33,21 @@ namespace TableAnalizer
                 this.Controls.Add(DataGridView2);
                 DataGridView2.Dock = DockStyle.Top;
                 DataGridView2.Size = new System.Drawing.Size(318, 800);
-
+                DataGridView2.Visible = false; // Inicialmente oculto
             }
 
             if (checkBox1.Checked)
             {
-                checkBox1.Text = "Mostrar datos relevantes";
+                checkBox1.Text = "Mostrar todos los lotes";
+
+                DataGridView1.Visible = false;
+                DataGridView2.Visible = true;
+                DataGridView2.DataSource = form1Instance.LoadExcelData(form1Instance.FilePath, true, true); // Cargar datos filtrados
             }
             else
             {
-                checkBox1.Text = "Mostrar todos los datos";
+                checkBox1.Text = "Mostrar lotes fallidos";
+
             }
         }
 
@@ -52,17 +57,32 @@ namespace TableAnalizer
 
             if (checkBox1.Checked)
             {
-                checkBox1.Text = "Mostrar datos relevantes";
+                checkBox1.Text = "Mostrar todos los lotes";
                 DataGridView1.Visible = false;
                 DataGridView2.Visible = true;
                 DataGridView2.DataSource = dataTable;
             }
             else
             {
-                checkBox1.Text = "Mostrar todos los datos";
+                checkBox1.Text = "Mostrar lotes fallidos";
                 DataGridView2.Visible = false;
                 DataGridView1.Visible = true;
                 DataGridView1.DataSource = dataTable;
+            }
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            if (DataGridView1 != null)
+            {
+                DataGridView1.DataSource = null;
+                this.Controls.Remove(DataGridView1);
+            }
+            if (DataGridView2 != null)
+            {
+                DataGridView2.DataSource = null;
+                this.Controls.Remove(DataGridView2);
             }
         }
     }
