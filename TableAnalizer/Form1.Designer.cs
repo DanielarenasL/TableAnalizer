@@ -17,9 +17,10 @@
 
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
             this.SelectDocument = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.Limpiar = new System.Windows.Forms.Button();
             this.chartPanel1 = new System.Windows.Forms.Panel();
@@ -41,8 +42,10 @@
             this.chartPanel12 = new System.Windows.Forms.Panel();
             this.chartPanel13 = new System.Windows.Forms.Panel();
             this.chartPanel14 = new System.Windows.Forms.Panel();
+            this.dataGridView3 = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
             this.SuspendLayout();
             // 
             // SelectDocument
@@ -51,7 +54,7 @@
             this.SelectDocument.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.SelectDocument.Cursor = System.Windows.Forms.Cursors.Hand;
             this.SelectDocument.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SelectDocument.Location = new System.Drawing.Point(840, 537);
+            this.SelectDocument.Location = new System.Drawing.Point(853, 613);
             this.SelectDocument.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.SelectDocument.Name = "SelectDocument";
             this.SelectDocument.Size = new System.Drawing.Size(337, 159);
@@ -64,16 +67,6 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(833, 455);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(93, 39);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "Total";
             // 
             // label3
             // 
@@ -90,7 +83,7 @@
             this.Limpiar.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.Limpiar.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Limpiar.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Limpiar.Location = new System.Drawing.Point(840, 717);
+            this.Limpiar.Location = new System.Drawing.Point(853, 613);
             this.Limpiar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Limpiar.Name = "Limpiar";
             this.Limpiar.Size = new System.Drawing.Size(337, 159);
@@ -144,7 +137,7 @@
             // 
             // chartPanel5
             // 
-            this.chartPanel5.Location = new System.Drawing.Point(499, 465);
+            this.chartPanel5.Location = new System.Drawing.Point(497, 526);
             this.chartPanel5.Name = "chartPanel5";
             this.chartPanel5.Size = new System.Drawing.Size(170, 135);
             this.chartPanel5.TabIndex = 17;
@@ -158,12 +151,14 @@
             // 
             // openDataGridViewButton
             // 
-            this.openDataGridViewButton.Location = new System.Drawing.Point(1002, 465);
+            this.openDataGridViewButton.BackColor = System.Drawing.Color.Plum;
+            this.openDataGridViewButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.openDataGridViewButton.Location = new System.Drawing.Point(958, 867);
             this.openDataGridViewButton.Name = "openDataGridViewButton";
             this.openDataGridViewButton.Size = new System.Drawing.Size(117, 65);
             this.openDataGridViewButton.TabIndex = 19;
-            this.openDataGridViewButton.Text = "button2";
-            this.openDataGridViewButton.UseVisualStyleBackColor = true;
+            this.openDataGridViewButton.Text = "Ver tablas";
+            this.openDataGridViewButton.UseVisualStyleBackColor = false;
             this.openDataGridViewButton.Click += new System.EventHandler(this.openDataGridViewButton_Click);
             // 
             // chartPanel9
@@ -193,22 +188,26 @@
             // 
             // Next
             // 
-            this.Next.Location = new System.Drawing.Point(991, 886);
+            this.Next.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.Next.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Next.Location = new System.Drawing.Point(1022, 794);
             this.Next.Name = "Next";
             this.Next.Size = new System.Drawing.Size(168, 67);
             this.Next.TabIndex = 20;
             this.Next.Text = "Siguiente";
-            this.Next.UseVisualStyleBackColor = true;
+            this.Next.UseVisualStyleBackColor = false;
             this.Next.Click += new System.EventHandler(this.Next_Click);
             // 
             // Back
             // 
-            this.Back.Location = new System.Drawing.Point(801, 886);
+            this.Back.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.Back.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Back.Location = new System.Drawing.Point(840, 794);
             this.Back.Name = "Back";
             this.Back.Size = new System.Drawing.Size(168, 67);
             this.Back.TabIndex = 21;
             this.Back.Text = "Anterior";
-            this.Back.UseVisualStyleBackColor = true;
+            this.Back.UseVisualStyleBackColor = false;
             this.Back.Click += new System.EventHandler(this.Back_Click);
             // 
             // chartPanel10
@@ -246,11 +245,36 @@
             this.chartPanel14.Size = new System.Drawing.Size(134, 100);
             this.chartPanel14.TabIndex = 18;
             // 
+            // dataGridView3
+            // 
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
+            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView3.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle13;
+            this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F);
+            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView3.DefaultCellStyle = dataGridViewCellStyle14;
+            this.dataGridView3.Location = new System.Drawing.Point(811, 448);
+            this.dataGridView3.Name = "dataGridView3";
+            this.dataGridView3.Size = new System.Drawing.Size(400, 159);
+            this.dataGridView3.TabIndex = 22;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1216, 974);
+            this.ClientSize = new System.Drawing.Size(1266, 974);
+            this.Controls.Add(this.dataGridView3);
             this.Controls.Add(this.chartPanel11);
             this.Controls.Add(this.chartPanel10);
             this.Controls.Add(this.chartPanel9);
@@ -270,7 +294,6 @@
             this.Controls.Add(this.chartPanel4);
             this.Controls.Add(this.Limpiar);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.dataGridView2);
             this.Controls.Add(this.SelectDocument);
@@ -281,6 +304,7 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -290,7 +314,6 @@
 
         private System.Windows.Forms.Button SelectDocument;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button Limpiar;
         private System.Windows.Forms.Panel chartPanel1;
@@ -312,5 +335,6 @@
         private System.Windows.Forms.Panel chartPanel11;
         private System.Windows.Forms.Panel chartPanel10;
         private System.Windows.Forms.Panel chartPanel14;
+        private System.Windows.Forms.DataGridView dataGridView3;
     }
 }

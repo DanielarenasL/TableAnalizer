@@ -52,17 +52,18 @@ namespace TableAnalizer
         {
             if (SelectDocument.Visible == Visible)
             {
-                label1.Visible = false;
                 Limpiar.Visible = false;
                 Next.Visible = false;
                 Back.Visible = false;
+                dataGridView3.Visible = false;
             }
             else
             {
-                label1.Visible = true;
                 Limpiar.Visible = true;
                 Next.Visible = true;
                 Back.Visible = true;
+                dataGridView3.Visible = true;
+
             }
         }
 
@@ -70,18 +71,24 @@ namespace TableAnalizer
         {
             dataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font(dataGridView1.Font, FontStyle.Bold);
             dataGridView2.ColumnHeadersDefaultCellStyle.Font = new Font(dataGridView1.Font, FontStyle.Bold);
+            dataGridView3.ColumnHeadersDefaultCellStyle.Font = new Font(dataGridView1.Font, FontStyle.Bold);
 
             dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.Gray;
             dataGridView2.ColumnHeadersDefaultCellStyle.BackColor = Color.Gray;
+            dataGridView3.ColumnHeadersDefaultCellStyle.BackColor = Color.Gray;
             dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
             dataGridView2.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dataGridView3.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dataGridView3.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridView3.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+
+
         }
 
 
         //Seleccionar documento
         private void SelectDocument_Click(object sender, EventArgs e)
         {
-            // Evita que se agreguen archivos que no sean excel
             openFileDialog1.Filter = "Archivos de Excel (*.xlsx)|*.xlsx";
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -94,7 +101,6 @@ namespace TableAnalizer
                 dataGridView2.Visible = false;
 
                 CountBatch(dataTable);
-
                 ShowGraphics();
             }
         }
@@ -219,6 +225,8 @@ namespace TableAnalizer
         private void CountBatch(DataTable dataTable)
         {
             totalLotes = dataTable.Rows.Count;
+            lotesFailed = 0;
+            lotesPassed = 0;
 
             foreach (DataRow row in dataTable.Rows)
             {
@@ -236,7 +244,18 @@ namespace TableAnalizer
             double passedPercentage = (100.0 * lotesPassed) / totalLotes;
             double failedPercentage = (100.0 * lotesFailed) / totalLotes;
 
-            label1.Text = $"Total: {totalLotes} \n\nPassed: {lotesPassed} ({passedPercentage:F2}%) \n\nFailed: {lotesFailed} ({failedPercentage:F2}%)";
+            DataTable countBatchTable = new DataTable();
+            countBatchTable.Columns.Add("Description");
+            countBatchTable.Columns.Add("Cant");
+            countBatchTable.Columns.Add("Percentage");
+
+            countBatchTable.Rows.Add("Total", totalLotes, "100%");
+            countBatchTable.Rows.Add("Passed", lotesPassed, $"{passedPercentage:F2}%");
+            countBatchTable.Rows.Add("Failed", lotesFailed, $"{failedPercentage:F2}%");
+
+            dataGridView3.DataSource = countBatchTable;
+            dataGridView3.Visible = true;
+
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -259,7 +278,6 @@ namespace TableAnalizer
             totalLotes = 0;
             lotesFailed = 0;
             lotesPassed = 0;
-            label1.Text = "Total: 0  \n\nPassed: 0 (0.00%) \n\nFailed: 0 (0.00%)";
             label3.Text = string.Empty;
 
             // Permitir seleccionar otro archivo
@@ -402,23 +420,23 @@ namespace TableAnalizer
 
             // Customize the color palette to include 15 tones
             var pastelColors = new List<Color>
-    {
-        Color.FromArgb(255, 105, 97),   // Darker Pastel Pink
-        Color.FromArgb(255, 179, 71),   // Darker Pastel Orange
-        Color.FromArgb(253, 253, 150),  // Darker Pastel Yellow
-        Color.FromArgb(119, 221, 119),  // Darker Pastel Green
-        Color.FromArgb(119, 158, 203),  // Darker Pastel Blue
-        Color.FromArgb(204, 153, 255),  // Darker Pastel Purple
-        Color.FromArgb(255, 204, 204),  // Darker Pastel Peach
-        Color.FromArgb(255, 255, 204),  // Darker Pastel Lemon
-        Color.FromArgb(204, 255, 204),  // Darker Pastel Mint
-        Color.FromArgb(204, 229, 255),  // Darker Pastel Sky Blue
-        Color.FromArgb(255, 204, 229),  // Darker Pastel Magenta
-        Color.FromArgb(255, 229, 204),  // Darker Pastel Coral
-        Color.FromArgb(229, 204, 255),  // Darker Pastel Lavender
-        Color.FromArgb(204, 255, 229),  // Darker Pastel Aqua
-        Color.FromArgb(255, 255, 229)   // Darker Pastel Cream
-    };
+            {
+                Color.FromArgb(255, 105, 97),   // Darker Pastel Pink
+                Color.FromArgb(255, 179, 71),   // Darker Pastel Orange
+                Color.FromArgb(253, 253, 150),  // Darker Pastel Yellow
+                Color.FromArgb(119, 221, 119),  // Darker Pastel Green
+                Color.FromArgb(119, 158, 203),  // Darker Pastel Blue
+                Color.FromArgb(204, 153, 255),  // Darker Pastel Purple
+                Color.FromArgb(255, 204, 204),  // Darker Pastel Peach
+                Color.FromArgb(255, 255, 204),  // Darker Pastel Lemon
+                Color.FromArgb(204, 255, 204),  // Darker Pastel Mint
+                Color.FromArgb(204, 229, 255),  // Darker Pastel Sky Blue
+                Color.FromArgb(255, 204, 229),  // Darker Pastel Magenta
+                Color.FromArgb(255, 229, 204),  // Darker Pastel Coral
+                Color.FromArgb(229, 204, 255),  // Darker Pastel Lavender
+                Color.FromArgb(204, 255, 229),  // Darker Pastel Aqua
+                Color.FromArgb(255, 255, 229)   // Darker Pastel Cream
+            };
 
             for (int i = 0; i < data.Count; i++)
             {
