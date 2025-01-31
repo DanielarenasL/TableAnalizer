@@ -57,6 +57,10 @@ namespace TableAnalizer
                 Back.Visible = false;
                 dataGridView3.Visible = false;
                 openDataGridViewButton.Visible = false;
+                label1.Visible = false;
+                label2.Visible = false;
+                FromDate.Visible = false;
+                ToDate.Visible = false;
             }
             else
             {
@@ -65,7 +69,10 @@ namespace TableAnalizer
                 Back.Visible = true;
                 dataGridView3.Visible = true;
                 openDataGridViewButton.Visible = true;
-
+                label1.Visible = true;
+                label2.Visible = true;
+                FromDate.Visible = true;
+                ToDate.Visible = true;
             }
         }
 
@@ -118,9 +125,9 @@ namespace TableAnalizer
 
             var columnsToShow = new List<string>
             {
-                "Shade Name", "Max Colour Diff", "Substr Code", "Count/Ply",
-                "Fibre Type", "Dyeing Method", "Recipe Status", "Machine Name", "Machine Vol",
-                "Failure Reason", "Dyeclass(es)", "Worker", "Article", "Material Code"
+                "Machine Name", "Total Cheeses", "Fibre Type", "Colour Group", "Substr Code",
+                "Count/Ply", "Dyeclass(es)", "Total Dye Conc Stage 1", "Total Dye Conc Stage 2", "Dyeing Method", "Recipe Status",
+                "Recipe Type", "Colour Category", "Prescreen User", "Prescreen Procedure Path", "Shift", "Worker"
             };
 
             ShowPieCharts(failedDataTable, columnsToShow);
@@ -144,15 +151,19 @@ namespace TableAnalizer
                 "Total Dye Conc Stage 2", "Worker", "Shift", "Machine In", "Machine Out", "Dyelot Comments",
                 "Shade Desc", "Shade Card", "Recipe Type", "Material Code", "Customers", "Lub Type", "Unfinished Stnd Type",
                 "L", "A", "B", "Chroma", "Hue", "Recipe Type Code", "No. of Passed Cheeses", "Producer", "Finish Type",
-                "Fastness Type", "Dyed From", "Comment", "Colour Category", "Article", "Source Dyehouse", "Speedline Priority"
+                "Fastness Type", "Dyed From", "Comment", "Colour Category", "Article", "Source Dyehouse", "Speedline Priority",
+                "Unlevel", "Recipe Version No Minor", "Recipe Version No", "Update Date", "Updated By", "Update Method",
+                "Thread Group", "Prescreen User", "Prescreen Procedure Path", "Pass Fail Date", "Order Created", "Colour Group",
+                "Delta Hue Descriptor", "Actual Dye Conc 6", "Actual Dye Conc 5", "Actual Dye Conc 4", "Actual Dye Conc 3",
+                "Actual Dye Conc 2", "Actual Dye Conc 1"
             };
 
             // Define las columnas "especiales"
             var columnsToShow = new List<string>
             {
-                "Batch Id", "Dyelot Date", "Shade Name", "Max Colour Diff", "Substr Code", "Batch Status", "Count/Ply",
-                "Fibre Type", "Dyeing Method", "Recipe Status", "Delta L", "Delta c", "Delta h", "Machine Name", "Machine Vol",
-                "Failure Reason", "Dyeclass(es)", "Worker", "Article", "Material Code"
+                "Batch Id", "Machine Name", "Total Cheeses", "Fibre Type", "Colour Group", "Batch Status", "Substr Code",
+                "Count/Ply", "Dyeclass(es)", "Total Dye Conc Stage 1", "Total Dye Conc Stage 2", "Dyeing Method", "Recipe Status",
+                "Recipe Type", "Colour Category", "Prescreen User", "Prescreen Procedure Path", "Shift", "Worker"
             };
 
             using (var package = new ExcelPackage(new System.IO.FileInfo(filePath)))
@@ -256,6 +267,7 @@ namespace TableAnalizer
             countBatchTable.Rows.Add("Total", totalLotes, "100%");
             countBatchTable.Rows.Add("Passed", lotesPassed, $"{passedPercentage:F2}%");
             countBatchTable.Rows.Add("Failed", lotesFailed, $"{failedPercentage:F2}%");
+            
 
             dataGridView3.DataSource = countBatchTable;
             dataGridView3.Visible = true;
@@ -282,7 +294,6 @@ namespace TableAnalizer
             totalLotes = 0;
             lotesFailed = 0;
             lotesPassed = 0;
-            label3.Text = string.Empty;
 
             // Permitir seleccionar otro archivo
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -310,14 +321,13 @@ namespace TableAnalizer
             var panels = new List<Panel>
             {
                 chartPanel1, chartPanel2, chartPanel3, chartPanel4, chartPanel5, chartPanel6, chartPanel7, chartPanel8,
-                chartPanel9, chartPanel10, chartPanel11, chartPanel12, chartPanel13, chartPanel14
+                chartPanel9, chartPanel10, chartPanel11, chartPanel12, chartPanel13, chartPanel14, chartPanel15, chartPanel16, chartPanel17
             };
 
             var position1 = new Point(0, 3);
             var position2 = new Point(401, 3);
-            var position3 = new Point(801, 3);
-            var position4 = new Point(2, 427);
-            var position5 = new Point(401, 427);
+            var position3 = new Point(2, 480);
+            var position4 = new Point(401, 480);
             var defaultPosition = new Point(2000, 2000);
 
             
@@ -328,7 +338,7 @@ namespace TableAnalizer
                 chartPanel2.Location = position2;
                 chartPanel3.Location = position3;
                 chartPanel4.Location = position4;
-                chartPanel5.Location = position5;
+                chartPanel5.Location = defaultPosition;
                 chartPanel6.Location = defaultPosition;
                 chartPanel7.Location = defaultPosition;
                 chartPanel8.Location = defaultPosition;
@@ -338,6 +348,9 @@ namespace TableAnalizer
                 chartPanel12.Location = defaultPosition;
                 chartPanel13.Location = defaultPosition;
                 chartPanel14.Location = defaultPosition;
+                chartPanel15.Location = defaultPosition;
+                chartPanel16.Location = defaultPosition;
+                chartPanel17.Location = defaultPosition;
 
 
             }
@@ -347,18 +360,42 @@ namespace TableAnalizer
                 chartPanel2.Location = defaultPosition;
                 chartPanel3.Location = defaultPosition;
                 chartPanel4.Location = defaultPosition;
-                chartPanel5.Location = defaultPosition;
-                chartPanel6.Location = position1;
-                chartPanel7.Location = position2;
-                chartPanel8.Location = position3;
-                chartPanel9.Location = position4;
-                chartPanel10.Location = position5;
+                chartPanel5.Location = position1;
+                chartPanel6.Location = position2;
+                chartPanel7.Location = position3;
+                chartPanel8.Location = position4;
+                chartPanel9.Location = defaultPosition;
+                chartPanel10.Location = defaultPosition;
                 chartPanel11.Location = defaultPosition;
                 chartPanel12.Location = defaultPosition;
                 chartPanel13.Location = defaultPosition;
                 chartPanel14.Location = defaultPosition;
+                chartPanel15.Location = defaultPosition;
+                chartPanel16.Location = defaultPosition;
+                chartPanel17.Location = defaultPosition;
+
             }
-            else
+            else if( page == 3) 
+            {
+                chartPanel1.Location = defaultPosition;
+                chartPanel2.Location = defaultPosition;
+                chartPanel3.Location = defaultPosition;
+                chartPanel4.Location = defaultPosition;
+                chartPanel5.Location = defaultPosition;
+                chartPanel6.Location = defaultPosition;
+                chartPanel7.Location = defaultPosition;
+                chartPanel8.Location = defaultPosition;
+                chartPanel9.Location = position1;
+                chartPanel10.Location = position2;
+                chartPanel11.Location = position3;
+                chartPanel12.Location = position4;
+                chartPanel13.Location = defaultPosition;
+                chartPanel14.Location = defaultPosition;
+                chartPanel15.Location = defaultPosition;
+                chartPanel16.Location = defaultPosition;
+                chartPanel17.Location = defaultPosition;
+
+            }else if( page == 4) 
             {
                 chartPanel1.Location = defaultPosition;
                 chartPanel2.Location = defaultPosition;
@@ -370,16 +407,38 @@ namespace TableAnalizer
                 chartPanel8.Location = defaultPosition;
                 chartPanel9.Location = defaultPosition;
                 chartPanel10.Location = defaultPosition;
-                chartPanel11.Location = position1;
-                chartPanel12.Location = position2;
-                chartPanel13.Location = position3;
-                chartPanel14.Location = position4;
+                chartPanel11.Location = defaultPosition;
+                chartPanel12.Location = defaultPosition;
+                chartPanel13.Location = position1;
+                chartPanel14.Location = position2;
+                chartPanel15.Location = position3;
+                chartPanel16.Location = position4;
+                chartPanel17.Location = defaultPosition;
+            } else
+            {
+                chartPanel1.Location = defaultPosition;
+                chartPanel2.Location = defaultPosition;
+                chartPanel3.Location = defaultPosition;
+                chartPanel4.Location = defaultPosition;
+                chartPanel5.Location = defaultPosition;
+                chartPanel6.Location = defaultPosition;
+                chartPanel7.Location = defaultPosition;
+                chartPanel8.Location = defaultPosition;
+                chartPanel9.Location = defaultPosition;
+                chartPanel10.Location = defaultPosition;
+                chartPanel11.Location = defaultPosition;
+                chartPanel12.Location = defaultPosition;
+                chartPanel13.Location = defaultPosition;
+                chartPanel14.Location = defaultPosition;
+                chartPanel15.Location = defaultPosition;
+                chartPanel16.Location = defaultPosition;
+                chartPanel17.Location = position1;
             }
 
             foreach (var panel in panels)
             {
                 panel.Controls.Clear(); // Limpiar el contenido del panel
-                panel.Size = new System.Drawing.Size(410, 440);
+                panel.Size = new System.Drawing.Size(410, 480);
                 panel.BringToFront();
             }
             for (int i = 0; i < columnsToShow.Count && i < panels.Count; i++)
@@ -425,10 +484,10 @@ namespace TableAnalizer
             // Customize the color palette to include 15 tones
             var pastelColors = new List<Color>
             {
+                Color.FromArgb(119, 221, 119),  // Darker Pastel Green
                 Color.FromArgb(255, 105, 97),   // Darker Pastel Pink
                 Color.FromArgb(255, 179, 71),   // Darker Pastel Orange
                 Color.FromArgb(253, 253, 150),  // Darker Pastel Yellow
-                Color.FromArgb(119, 221, 119),  // Darker Pastel Green
                 Color.FromArgb(119, 158, 203),  // Darker Pastel Blue
                 Color.FromArgb(204, 153, 255),  // Darker Pastel Purple
                 Color.FromArgb(255, 204, 204),  // Darker Pastel Peach
@@ -469,7 +528,7 @@ namespace TableAnalizer
             {
                 double percentage = (point.YValues[0] / dataTable.Rows.Count) * 100;
                 if (columnName == "Max Colour Diff" || columnName == "Substr Code"
-                    || columnName == "Count/Ply" || columnName == "Fibre Type" || columnName == "Dyeing Method" || columnName == "Machine Vol")
+                    || columnName == "Fibre Type" || columnName == "Dyeing Method" || columnName == "Machine Vol")
                 {
                     // Show the name and percentage on the data point
                     point.Label = $"{point.AxisLabel} {percentage:F0}%";
@@ -478,7 +537,7 @@ namespace TableAnalizer
                     chart.Legends.Clear();
                     chart.ChartAreas.Add(chartArea);
                     chartArea.Area3DStyle.Enable3D = true; // Enable 3D
-                    chartArea.Position = new ElementPosition(0, 0, 100, 100); // Adjust the position and size
+                    chartArea.Position = new ElementPosition(0, 0, 105, 105); // Adjust the position and size
                     chartArea.InnerPlotPosition = new ElementPosition(10, 10, 85, 85); // Adjust the inner plot position
                 }
                 else
@@ -496,7 +555,7 @@ namespace TableAnalizer
                     chart.ChartAreas.Clear();
                     chart.ChartAreas.Add(chartArea);
                     chartArea.Area3DStyle.Enable3D = true; // Enable 3D
-                    chartArea.Position = new ElementPosition(0, 0, 80, 80); // Adjust the position and size
+                    chartArea.Position = new ElementPosition(0, 0, 95, 95); // Adjust the position and size
                     chartArea.InnerPlotPosition = new ElementPosition(10, 10, 80, 80); // Adjust the inner plot position
                 }
             }
@@ -515,7 +574,7 @@ namespace TableAnalizer
 
         private void Next_Click(object sender, EventArgs e)
         {
-            if (page <= 2)
+            if (page <= 4)
             {
                 page++;
                 ShowGraphics();
