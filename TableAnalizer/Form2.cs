@@ -7,13 +7,15 @@ namespace TableAnalizer
     {
         private Form1 form1Instance;
 
+        //Constructor
         public Form2(Form1 form1)
         {
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
-            this.form1Instance = form1;
+            this.form1Instance = form1; ///Trae datos del form1
         }
 
+        //Trae las dos tablas del form1
         public DataGridView DataGridView1 { get; set; }
         public DataGridView DataGridView2 { get; set; }
 
@@ -51,6 +53,8 @@ namespace TableAnalizer
             }
         }
 
+
+        //Cambia de vista entre tablas al darle al checkbox
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             var dataTable = form1Instance.LoadExcelData(form1Instance.FilePath, checkBox1.Checked, checkBox1.Checked);
@@ -71,6 +75,8 @@ namespace TableAnalizer
             }
         }
 
+
+        //Reinicia las instancias de las tablas 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);

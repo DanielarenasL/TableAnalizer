@@ -48,6 +48,8 @@ namespace TableAnalizer
             View();
         }
 
+
+        //Vistas 
         private void View()
         {
             if (SelectDocument.Visible == Visible)
@@ -113,6 +115,8 @@ namespace TableAnalizer
                 ShowGraphics();
             }
         }
+
+        //Definir diagramas
         private void ShowGraphics()
         {
             var dataTable = LoadExcelData(filePath);
@@ -136,6 +140,8 @@ namespace TableAnalizer
 
         public string FilePath => filePath;
 
+
+        //Carga los datos de las tablas
         public System.Data.DataTable LoadExcelData(string filePath, bool filterColumns = false, bool filterFailed = false)
         {
             var dataTable = new System.Data.DataTable();
@@ -213,6 +219,7 @@ namespace TableAnalizer
             return dataTable;
         }
 
+
         //Pinta de rojo los que no pasaron
         private void DataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
@@ -284,6 +291,8 @@ namespace TableAnalizer
 
         }
 
+
+        //Limpia todo al seleccionar otro archivo
         private void Limpiar_Click(object sender, EventArgs e)
         {
             // Limpiar los DataGrid
@@ -315,9 +324,10 @@ namespace TableAnalizer
         }
 
 
-
+        //Mostrar diagramas
         private void ShowPieCharts(DataTable dataTable, List<string> columnsToShow )
         {
+            //Define todos los paneles que se van a usar para los diagramas
             var panels = new List<Panel>
             {
                 chartPanel1, chartPanel2, chartPanel3, chartPanel4, chartPanel5, chartPanel6, chartPanel7, chartPanel8,
@@ -331,7 +341,7 @@ namespace TableAnalizer
             var defaultPosition = new Point(2000, 2000);
 
             
-
+            //Los acomoda en sus respectivos lugares
             if (page == 1)
             {
                 chartPanel1.Location = position1;
@@ -441,6 +451,7 @@ namespace TableAnalizer
                 panel.Size = new System.Drawing.Size(410, 480);
                 panel.BringToFront();
             }
+
             for (int i = 0; i < columnsToShow.Count && i < panels.Count; i++)
             {
                 var columnName = columnsToShow[i];
@@ -458,7 +469,7 @@ namespace TableAnalizer
         }
 
 
-
+        //Le da colores y estilos a los diagramas
         private void UpdateChart(DataTable dataTable, string columnName, Chart chart)
         {
             chart.Series.Clear();
@@ -515,7 +526,7 @@ namespace TableAnalizer
                 if (!allEqual && percentage == maxPercentage)
                 {
                     point["Exploded"] = "true"; // Separar el sector con mayor porcentaje
-                    point.Color = Color.FromArgb(135, 206, 250); // Color verde fluorescente
+                    point.Color = Color.FromArgb(135, 206, 250); 
                 }
 
                 series.Points.Add(point);
@@ -523,46 +534,42 @@ namespace TableAnalizer
 
             chart.Series.Add(series);
 
-            // Customize the legend and data point labels
             foreach (var point in series.Points)
             {
                 double percentage = (point.YValues[0] / dataTable.Rows.Count) * 100;
                 if (columnName == "Max Colour Diff" || columnName == "Substr Code"
                     || columnName == "Fibre Type" || columnName == "Dyeing Method" || columnName == "Machine Vol")
                 {
-                    // Show the name and percentage on the data point
                     point.Label = $"{point.AxisLabel} {percentage:F0}%";
                     var chartArea = new ChartArea();
                     chart.ChartAreas.Clear();
                     chart.Legends.Clear();
                     chart.ChartAreas.Add(chartArea);
-                    chartArea.Area3DStyle.Enable3D = true; // Enable 3D
+                    chartArea.Area3DStyle.Enable3D = true;
                     chartArea.Position = new ElementPosition(0, 0, 105, 105); // Adjust the position and size
-                    chartArea.InnerPlotPosition = new ElementPosition(10, 10, 85, 85); // Adjust the inner plot position
+                    chartArea.InnerPlotPosition = new ElementPosition(10, 10, 85, 85); 
                 }
                 else
                 {
-                    // Show the name and percentage in the legend
-                    point.LegendText = $"{point.AxisLabel} ";  // Set the legend text to the axis label
+                    point.LegendText = $"{point.AxisLabel} ";  
                     var legend = chart.Legends["Legend"];
                     legend.Docking = Docking.Bottom; // Position the legend on the right
                     legend.AutoFitMinFontSize = 5; // Set minimum font size to auto fit
                     legend.Font = new Font("Arial", 8); // Adjust the font size to make it smaller
-                    legend.IsTextAutoFit = true; // Enable auto fit for text
+                    legend.IsTextAutoFit = true;
 
-                    // Adjust the chart area to make the pie chart larger and 3D
                     var chartArea = new ChartArea();
                     chart.ChartAreas.Clear();
                     chart.ChartAreas.Add(chartArea);
-                    chartArea.Area3DStyle.Enable3D = true; // Enable 3D
+                    chartArea.Area3DStyle.Enable3D = true; 
                     chartArea.Position = new ElementPosition(0, 0, 95, 95); // Adjust the position and size
-                    chartArea.InnerPlotPosition = new ElementPosition(10, 10, 80, 80); // Adjust the inner plot position
+                    chartArea.InnerPlotPosition = new ElementPosition(10, 10, 80, 80); 
                 }
             }
         }
 
 
-
+        //Llamar al Form2 al darle al boton
         private void openDataGridViewButton_Click(object sender, EventArgs e)
         {
 
