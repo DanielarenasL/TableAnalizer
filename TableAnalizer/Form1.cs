@@ -56,6 +56,7 @@ namespace TableAnalizer
                 Next.Visible = false;
                 Back.Visible = false;
                 dataGridView3.Visible = false;
+                openDataGridViewButton.Visible = false;
             }
             else
             {
@@ -63,6 +64,7 @@ namespace TableAnalizer
                 Next.Visible = true;
                 Back.Visible = true;
                 dataGridView3.Visible = true;
+                openDataGridViewButton.Visible = true;
 
             }
         }
@@ -125,11 +127,13 @@ namespace TableAnalizer
             
         }
 
-        private System.Data.DataTable LoadExcelData(string filePath, bool filterColumns = false, bool filterFailed = false)
+        public string FilePath => filePath;
+
+        public System.Data.DataTable LoadExcelData(string filePath, bool filterColumns = false, bool filterFailed = false)
         {
             var dataTable = new System.Data.DataTable();
 
-            //Define las columnas originales
+            // Define las columnas originales
             var originalColumns = new List<string>
             {
                 "Batch Id", "Dyelot Date", "Orders", "Shade Name", "Max Colour Diff", "Batch Status",
@@ -143,7 +147,7 @@ namespace TableAnalizer
                 "Fastness Type", "Dyed From", "Comment", "Colour Category", "Article", "Source Dyehouse", "Speedline Priority"
             };
 
-            //Define las columnas "especiales"
+            // Define las columnas "especiales"
             var columnsToShow = new List<string>
             {
                 "Batch Id", "Dyelot Date", "Shade Name", "Max Colour Diff", "Substr Code", "Batch Status", "Count/Ply",
@@ -502,11 +506,10 @@ namespace TableAnalizer
 
         private void openDataGridViewButton_Click(object sender, EventArgs e)
         {
-            Form2 form2 = new Form2();
+            Form2 form2 = new Form2(this);
             form2.DataGridView1 = this.dataGridView1;
             form2.DataGridView2 = this.dataGridView2;
             form2.Show();
-
         }
 
         private void Next_Click(object sender, EventArgs e)
