@@ -153,10 +153,9 @@ namespace TableAnalizer
         public System.Data.DataTable LoadExcelData(string filePath, bool filterColumns = false, bool filterFailed = false, bool applyDateFilter = false)
         {
             var dataTable = new System.Data.DataTable();
-            DateTime fromDate = FromDate.Value;
-            DateTime toDate = ToDate.Value;
+            DateTime fromDate = FromDate.Value.Date;
+            DateTime toDate = ToDate.Value.Date;
 
-            // Define las columnas originales
             var originalColumns = new List<string>
     {
         "Batch Id", "Dyelot Date", "Orders", "Shade Name", "Max Colour Diff", "Batch Status",
@@ -216,7 +215,7 @@ namespace TableAnalizer
                             if (applyDateFilter && columnName == "Machine Out")
                             {
                                 DateTime machineOutDate = DateTime.Parse(worksheet.Cells[row, col].Text);
-                                if (!(machineOutDate >= fromDate && machineOutDate <= toDate))
+                                if (!(machineOutDate.Date >= fromDate && machineOutDate.Date <= toDate))
                                 {
                                     addRow = false;
                                     break;
@@ -237,7 +236,6 @@ namespace TableAnalizer
 
             return dataTable;
         }
-
 
 
         //Pinta de rojo los que no pasaron
