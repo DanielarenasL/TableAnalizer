@@ -26,6 +26,8 @@ namespace TableAnalizer
         private bool state = false;
         private string filePath = string.Empty;
         private int page = 1;
+        private bool isFromDateSet = false;
+        private bool isToDateSet = false;
 
         //Constructor 
         public Form1()
@@ -41,7 +43,7 @@ namespace TableAnalizer
 
             dataGridView1.CellFormatting += DataGridView_CellFormatting;
             dataGridView2.CellFormatting += DataGridView_CellFormatting;
-            dataGridView1.Visible = false;
+            dataGridView1.Visible = true;
             dataGridView2.Visible = false;
 
 
@@ -78,7 +80,7 @@ namespace TableAnalizer
             }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void Form1_Load(object sender, EventArgs e) 
         {
             dataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font(dataGridView1.Font, FontStyle.Bold);
             dataGridView2.ColumnHeadersDefaultCellStyle.Font = new Font(dataGridView1.Font, FontStyle.Bold);
@@ -92,7 +94,6 @@ namespace TableAnalizer
             dataGridView3.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
             dataGridView3.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView3.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-
 
         }
 
@@ -108,8 +109,8 @@ namespace TableAnalizer
                 var dataTable = LoadExcelData(filePath);
 
                 dataGridView1.DataSource = dataTable;
-                dataGridView1.Visible = false;
-                dataGridView2.Visible = false;
+                dataGridView1.Visible = true;
+                dataGridView2.Visible = true;
 
                 CountBatch(dataTable);
                 ShowGraphics();
@@ -119,23 +120,28 @@ namespace TableAnalizer
         //Definir diagramas
         private void ShowGraphics()
         {
-            var dataTable = LoadExcelData(filePath);
-
-
-            // Filtrar las filas donde el Batch Status sea "FAILED"
-            var failedDataTable = dataTable.AsEnumerable()
-                .Where(row => row["Batch Status"].ToString() == "FAILED")
-                .CopyToDataTable();
-
-            var columnsToShow = new List<string>
+            try
             {
-                "Machine Name", "Total Cheeses", "Fibre Type", "Colour Group", "Substr Code",
-                "Count/Ply", "Dyeclass(es)", "Total Dye Conc Stage 1", "Total Dye Conc Stage 2", "Dyeing Method", "Recipe Status",
-                "Recipe Type", "Colour Category", "Prescreen User", "Prescreen Procedure Path", "Shift", "Worker"
-            };
+                var dataTable = LoadExcelData(filePath);
 
-            ShowPieCharts(failedDataTable, columnsToShow);
-            
+                // Filtrar las filas donde el Batch Status sea "FAILED"
+                var failedDataTable = dataTable.AsEnumerable()
+                    .Where(row => row["Batch Status"].ToString() == "FAILED")
+                    .CopyToDataTable();
+
+                var columnsToShow = new List<string>
+        {
+            "Machine Name", "Total Cheeses", "Fibre Type", "Colour Group", "Substr Code",
+            "Count/Ply", "Dyeclass(es)", "Total Dye Conc Stage 1", "Total Dye Conc Stage 2", "Dyeing Method", "Recipe Status",
+            "Recipe Type", "Colour Category", "Prescreen User", "Prescreen Procedure Path", "Shift", "Worker"
+        };
+
+                ShowPieCharts(failedDataTable, columnsToShow);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ocurrió un error al mostrar los gráficos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         public string FilePath => filePath;
@@ -145,32 +151,34 @@ namespace TableAnalizer
         public System.Data.DataTable LoadExcelData(string filePath, bool filterColumns = false, bool filterFailed = false)
         {
             var dataTable = new System.Data.DataTable();
+            DateTime fromDate = FromDate.Value;
+            DateTime toDate = ToDate.Value;
 
             // Define las columnas originales
             var originalColumns = new List<string>
-            {
-                "Batch Id", "Dyelot Date", "Orders", "Shade Name", "Max Colour Diff", "Batch Status",
-                "Substr Code", "Count/Ply", "Thread Quality", "Fibre Type", "Dyeing Method", "Recipe Status",
-                "Delta L", "Delta c", "Delta h", "Machine Name", "Machine Vol", "Total Cheeses", "Total Batch Weight",
-                "Failure Reason", "Dyeclass(es)", "Dye Triangle 1", "Dye Code 1", "Dye Code 2", "Dye Code 3",
-                "Total Dye Conc Stage 1", "Dye Triangle 2", "Dye Code 4", "Dye Code 5", "Dye Code 6",
-                "Total Dye Conc Stage 2", "Worker", "Shift", "Machine In", "Machine Out", "Dyelot Comments",
-                "Shade Desc", "Shade Card", "Recipe Type", "Material Code", "Customers", "Lub Type", "Unfinished Stnd Type",
-                "L", "A", "B", "Chroma", "Hue", "Recipe Type Code", "No. of Passed Cheeses", "Producer", "Finish Type",
-                "Fastness Type", "Dyed From", "Comment", "Colour Category", "Article", "Source Dyehouse", "Speedline Priority",
-                "Unlevel", "Recipe Version No Minor", "Recipe Version No", "Update Date", "Updated By", "Update Method",
-                "Thread Group", "Prescreen User", "Prescreen Procedure Path", "Pass Fail Date", "Order Created", "Colour Group",
-                "Delta Hue Descriptor", "Actual Dye Conc 6", "Actual Dye Conc 5", "Actual Dye Conc 4", "Actual Dye Conc 3",
-                "Actual Dye Conc 2", "Actual Dye Conc 1"
-            };
+    {
+        "Batch Id", "Dyelot Date", "Orders", "Shade Name", "Max Colour Diff", "Batch Status",
+        "Substr Code", "Count/Ply", "Thread Quality", "Fibre Type", "Dyeing Method", "Recipe Status",
+        "Delta L", "Delta c", "Delta h", "Machine Name", "Machine Vol", "Total Cheeses", "Total Batch Weight",
+        "Failure Reason", "Dyeclass(es)", "Dye Triangle 1", "Dye Code 1", "Dye Code 2", "Dye Code 3",
+        "Total Dye Conc Stage 1", "Dye Triangle 2", "Dye Code 4", "Dye Code 5", "Dye Code 6",
+        "Total Dye Conc Stage 2", "Worker", "Shift", "Machine In", "Machine Out", "Dyelot Comments",
+        "Shade Desc", "Shade Card", "Recipe Type", "Material Code", "Customers", "Lub Type", "Unfinished Stnd Type",
+        "L", "A", "B", "Chroma", "Hue", "Recipe Type Code", "No. of Passed Cheeses", "Producer", "Finish Type",
+        "Fastness Type", "Dyed From", "Comment", "Colour Category", "Article", "Source Dyehouse", "Speedline Priority",
+        "Unlevel", "Recipe Version No Minor", "Recipe Version No", "Update Date", "Updated By", "Update Method",
+        "Thread Group", "Prescreen User", "Prescreen Procedure Path", "Pass Fail Date", "Order Created", "Colour Group",
+        "Delta Hue Descriptor", "Actual Dye Conc 6", "Actual Dye Conc 5", "Actual Dye Conc 4", "Actual Dye Conc 3",
+        "Actual Dye Conc 2", "Actual Dye Conc 1"
+    };
 
             // Define las columnas "especiales"
             var columnsToShow = new List<string>
-            {
-                "Batch Id", "Machine Name", "Total Cheeses", "Fibre Type", "Colour Group", "Batch Status", "Substr Code",
-                "Count/Ply", "Dyeclass(es)", "Total Dye Conc Stage 1", "Total Dye Conc Stage 2", "Dyeing Method", "Recipe Status",
-                "Recipe Type", "Colour Category", "Prescreen User", "Prescreen Procedure Path", "Shift", "Worker"
-            };
+    {
+        "Batch Id", "Machine Name", "Total Cheeses", "Fibre Type", "Colour Group", "Batch Status", "Substr Code",
+        "Count/Ply", "Dyeclass(es)", "Total Dye Conc Stage 1", "Total Dye Conc Stage 2", "Dyeing Method", "Recipe Status",
+        "Recipe Type", "Colour Category", "Prescreen User", "Prescreen Procedure Path", "Shift", "Worker", "Machine Out"
+    };
 
             using (var package = new ExcelPackage(new System.IO.FileInfo(filePath)))
             {
@@ -203,6 +211,16 @@ namespace TableAnalizer
                                 addRow = false;
                                 break;
                             }
+
+                            if (isFromDateSet && isToDateSet && columnName == "Machine Out")
+                            {
+                                DateTime machineOutDate = DateTime.Parse(worksheet.Cells[row, col].Text);
+                                if (machineOutDate < fromDate || machineOutDate > toDate)
+                                {
+                                    addRow = false;
+                                    break;
+                                }
+                            }
                         }
                     }
                     if (addRow)
@@ -218,7 +236,6 @@ namespace TableAnalizer
 
             return dataTable;
         }
-
 
         //Pinta de rojo los que no pasaron
         private void DataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -246,39 +263,44 @@ namespace TableAnalizer
         //Calcula las estadisticas
         private void CountBatch(DataTable dataTable)
         {
-            totalLotes = dataTable.Rows.Count;
-            lotesFailed = 0;
-            lotesPassed = 0;
-
-            foreach (DataRow row in dataTable.Rows)
+            try
             {
-                string batchValue = row["Batch Status"].ToString();
-                if (batchValue == "FAILED")
+                totalLotes = dataTable.Rows.Count;
+                lotesFailed = 0;
+                lotesPassed = 0;
+
+                foreach (DataRow row in dataTable.Rows)
                 {
-                    lotesFailed++;
+                    string batchValue = row["Batch Status"].ToString();
+                    if (batchValue == "FAILED")
+                    {
+                        lotesFailed++;
+                    }
+                    else if (batchValue == "PASSED")
+                    {
+                        lotesPassed++;
+                    }
                 }
-                else if (batchValue == "PASSED")
-                {
-                    lotesPassed++;
-                }
+
+                double passedPercentage = totalLotes > 0 ? (100.0 * lotesPassed) / totalLotes : 0;
+                double failedPercentage = totalLotes > 0 ? (100.0 * lotesFailed) / totalLotes : 0;
+
+                DataTable countBatchTable = new DataTable();
+                countBatchTable.Columns.Add("Description");
+                countBatchTable.Columns.Add("Cant");
+                countBatchTable.Columns.Add("Percentage");
+
+                countBatchTable.Rows.Add("Total", totalLotes, "100%");
+                countBatchTable.Rows.Add("Passed", lotesPassed, $"{passedPercentage:F2}%");
+                countBatchTable.Rows.Add("Failed", lotesFailed, $"{failedPercentage:F2}%");
+
+                dataGridView3.DataSource = countBatchTable;
+                dataGridView3.Visible = true;
             }
-
-            double passedPercentage = (100.0 * lotesPassed) / totalLotes;
-            double failedPercentage = (100.0 * lotesFailed) / totalLotes;
-
-            DataTable countBatchTable = new DataTable();
-            countBatchTable.Columns.Add("Description");
-            countBatchTable.Columns.Add("Cant");
-            countBatchTable.Columns.Add("Percentage");
-
-            countBatchTable.Rows.Add("Total", totalLotes, "100%");
-            countBatchTable.Rows.Add("Passed", lotesPassed, $"{passedPercentage:F2}%");
-            countBatchTable.Rows.Add("Failed", lotesFailed, $"{failedPercentage:F2}%");
-            
-
-            dataGridView3.DataSource = countBatchTable;
-            dataGridView3.Visible = true;
-
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al contar los lotes: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -596,6 +618,29 @@ namespace TableAnalizer
                 page--;
                 ShowGraphics();
 
+            }
+        }
+
+        private void FromDate_ValueChanged(object sender, EventArgs e)
+        {
+            isFromDateSet = true;
+            ApplyDateFilterIfReady();
+        }
+
+        private void ToDate_ValueChanged(object sender, EventArgs e)
+        {
+            isToDateSet = true;
+            ApplyDateFilterIfReady();
+        }
+
+        private void ApplyDateFilterIfReady()
+        {
+            if (isFromDateSet && isToDateSet)
+            {
+                var dataTable = LoadExcelData(filePath, filterColumns: true, filterFailed: true);
+                dataGridView1.DataSource = dataTable;
+                CountBatch(dataTable);
+                ShowGraphics();
             }
         }
     }
