@@ -496,8 +496,8 @@ namespace TableAnalizer
         private void UpdateChart(DataTable dataTable, string columnName, Chart chart)
         {
             chart.Series.Clear();
-            chart.Legends.Clear();  // Clear any existing legends
-            chart.Legends.Add(new Legend("Legend"));  // Add a new legend
+            chart.Legends.Clear();
+            chart.Legends.Add(new Legend("Legend"));
 
             var series = new Series
             {
@@ -515,30 +515,31 @@ namespace TableAnalizer
             double maxPercentage = data.Max(item => (item.Count / (double)dataTable.Rows.Count) * 100);
             bool allEqual = data.All(d => (d.Count / (double)dataTable.Rows.Count) * 100 == maxPercentage);
 
-            // Customize the color palette to include 15 tones
             var pastelColors = new List<Color>
-            {
-               Color.FromArgb(119, 221, 119),  // Pastel Green
-                Color.FromArgb(174, 198, 207),  // Pastel Blue
-                Color.FromArgb(253, 253, 150),  // Pastel Yellow
-                Color.FromArgb(207, 207, 255),  // Pastel Purple
-                Color.FromArgb(170, 240, 209),  // Pastel Mint
-                Color.FromArgb(178, 223, 238),  // Pastel Aqua
-                Color.FromArgb(255, 218, 185),  // Pastel Peach
-                Color.FromArgb(230, 230, 250),  // Pastel Lavender
-                Color.FromArgb(118, 215, 196),  // Pastel Turquoise
-                Color.FromArgb(217, 234, 211),  // Pastel Lime
-                Color.FromArgb(135, 206, 235),  // Pastel Sky Blue
-                Color.FromArgb(255, 182, 193),  // Light Pink
-                Color.FromArgb(255, 250, 205),  // Pastel Lemon
-                Color.FromArgb(240, 255, 255),  // Pastel Azure
-                Color.FromArgb(255, 221, 193),  // Pastel Coral
-                Color.FromArgb(153, 204, 204),  // Pastel Teal
-                Color.FromArgb(178, 190, 181),  // Pastel Olive
-                Color.FromArgb(245, 245, 220),  // Pastel Beige
-                Color.FromArgb(255, 255, 240),  // Pastel Ivory
-                Color.FromArgb(159, 226, 191)   // Pastel Seafoam
-            };
+    {
+        Color.FromArgb(119, 221, 119),  // Pastel Green
+        Color.FromArgb(174, 198, 207),  // Pastel Blue
+        Color.FromArgb(253, 253, 150),  // Pastel Yellow
+        Color.FromArgb(207, 207, 255),  // Pastel Purple
+        Color.FromArgb(170, 240, 209),  // Pastel Mint
+        Color.FromArgb(178, 223, 238),  // Pastel Aqua
+        Color.FromArgb(255, 218, 185),  // Pastel Peach
+        Color.FromArgb(230, 230, 250),  // Pastel Lavender
+        Color.FromArgb(118, 215, 196),  // Pastel Turquoise
+        Color.FromArgb(217, 234, 211),  // Pastel Lime
+        Color.FromArgb(135, 206, 235),  // Pastel Sky Blue
+        Color.FromArgb(255, 182, 193),  // Light Pink
+        Color.FromArgb(255, 250, 205),  // Pastel Lemon
+        Color.FromArgb(240, 255, 255),  // Pastel Azure
+        Color.FromArgb(255, 221, 193),  // Pastel Coral
+        Color.FromArgb(153, 204, 204),  // Pastel Teal
+        Color.FromArgb(178, 190, 181),  // Pastel Olive
+        Color.FromArgb(245, 245, 220),  // Pastel Beige
+        Color.FromArgb(255, 255, 240),  // Pastel Ivory
+        Color.FromArgb(159, 226, 191)   // Pastel Seafoam
+    };
+
+            List<DataPoint> maxPoints = new List<DataPoint>();
 
             for (int i = 0; i < data.Count; i++)
             {
@@ -555,13 +556,32 @@ namespace TableAnalizer
                 {
                     point["Exploded"] = "true"; // Separar el sector con mayor porcentaje
                     point.Color = Color.FromArgb(255, 136, 2);
-
+                    maxPoints.Add(point);  // Guardar los puntos con el porcentaje máximo para el evento hover
                 }
 
                 series.Points.Add(point);
             }
 
             chart.Series.Add(series);
+
+            ToolTip tooltip = new ToolTip();
+
+            if (maxPoints.Count > 0)
+            {
+                chart.MouseMove += (sender, e) =>
+                {
+                    var result = chart.HitTest(e.X, e.Y);
+                    if (result.ChartElementType == ChartElementType.DataPoint && maxPoints.Contains(result.Object as DataPoint))
+                    {
+                        var point = result.Object as DataPoint;
+                        tooltip.SetToolTip(chart, $"{point.AxisLabel}: {point.YValues[0]}/{dataTable.Rows.Count}");
+                    }
+                    else
+                    {
+                        tooltip.SetToolTip(chart, string.Empty);
+                    }
+                };
+            }
 
             foreach (var point in series.Points)
             {
@@ -596,7 +616,6 @@ namespace TableAnalizer
                 }
             }
         }
-
 
         //Llamar al Form2 al darle al boton
         private void openDataGridViewButton_Click(object sender, EventArgs e)
@@ -654,6 +673,66 @@ namespace TableAnalizer
 
                 CountBatch(dataTable); 
                 ShowGraphics(failedDataTable); 
+            }
+        }
+
+        private void InitializeCharts()
+        {
+            var chartPanels = new List<Panel>
+            {
+                chartPanel1, chartPanel2, chartPanel3, chartPanel4, chartPanel5, chartPanel6, chartPanel7, chartPanel8,
+                chartPanel9, chartPanel10, chartPanel11, chartPanel12, chartPanel13, chartPanel14, chartPanel15, chartPanel16, chartPanel17
+            };
+
+            foreach (var panel in chartPanels)
+            {
+                if (panel != null)
+                {
+                    var chart = new Chart();
+                    chart.Dock = DockStyle.Fill;
+                    chart.ChartAreas.Add(new ChartArea());
+
+                    // Suscribirse a los eventos de mouse
+                    chart.MouseMove += Chart_MouseMove;
+                    chart.MouseLeave += Chart_MouseLeave;
+
+                    panel.Controls.Add(chart);
+                }
+            }
+        }
+
+        private void Chart_MouseMove(object sender, MouseEventArgs e)
+        {
+            var chart = sender as Chart;
+            var result = chart.HitTest(e.X, e.Y);
+
+            if (result.ChartElementType == ChartElementType.DataPoint)
+            {
+                var point = result.Series.Points[result.PointIndex];
+                point.BackSecondaryColor = System.Drawing.Color.Red;
+                point.BackGradientStyle = GradientStyle.DiagonalRight;
+            }
+            else
+            {
+                ResetPoints(chart);
+            }
+        }
+
+        private void Chart_MouseLeave(object sender, EventArgs e)
+        {
+            var chart = sender as Chart;
+            ResetPoints(chart);
+        }
+
+        private void ResetPoints(Chart chart)
+        {
+            foreach (var series in chart.Series)
+            {
+                foreach (var point in series.Points)
+                {
+                    point.BackSecondaryColor = System.Drawing.Color.Empty;
+                    point.BackGradientStyle = GradientStyle.None;
+                }
             }
         }
     }
