@@ -27,7 +27,7 @@ namespace TableAnalizer
                 DataGridView1.Dock = DockStyle.Top;
                 DataGridView1.Size = new System.Drawing.Size(318, 800);
                 DataGridView1.Visible = true; // Asegurarse de que DataGridView1 esté visible
-                DataGridView1.DataSource = form1Instance.LoadExcelData(form1Instance.FilePath); // Cargar datos
+                DataGridView1.DataSource = form1Instance.LoadExcelData(form1Instance.FilePath, applyDateFilter: true); // Cargar datos filtrados por fecha
             }
 
             if (DataGridView2 != null)
@@ -44,12 +44,11 @@ namespace TableAnalizer
 
                 DataGridView1.Visible = false;
                 DataGridView2.Visible = true;
-                DataGridView2.DataSource = form1Instance.LoadExcelData(form1Instance.FilePath, true, true); // Cargar datos filtrados
+                DataGridView2.DataSource = form1Instance.LoadExcelData(form1Instance.FilePath, filterFailed: true, applyDateFilter: true); // Cargar datos fallidos filtrados por fecha
             }
             else
             {
                 checkBox1.Text = "Mostrar lotes fallidos";
-
             }
         }
 
@@ -57,7 +56,7 @@ namespace TableAnalizer
         //Cambia de vista entre tablas al darle al checkbox
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            var dataTable = form1Instance.LoadExcelData(form1Instance.FilePath, checkBox1.Checked, checkBox1.Checked);
+            var dataTable = form1Instance.LoadExcelData(form1Instance.FilePath, filterFailed: checkBox1.Checked, applyDateFilter: true);
 
             if (checkBox1.Checked)
             {

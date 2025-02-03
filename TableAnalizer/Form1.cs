@@ -239,7 +239,6 @@ namespace TableAnalizer
 
             return dataTable;
         }
-        
         //Pinta de rojo los que no pasaron
         private void DataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
