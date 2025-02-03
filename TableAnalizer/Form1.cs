@@ -106,24 +106,28 @@ namespace TableAnalizer
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 filePath = openFileDialog1.FileName;
-                var dataTable = LoadExcelData(filePath);
 
+                // Cargar todos los datos aplicando el filtro de fecha
+                var dataTable = LoadExcelData(filePath, filterColumns: false, filterFailed: false, applyDateFilter: true);
                 dataGridView1.DataSource = dataTable;
                 dataGridView1.Visible = true;
+
+                // Cargar solo los fallidos aplicando el filtro de fecha
+                var failedDataTable = LoadExcelData(filePath, filterColumns: false, filterFailed: true, applyDateFilter: true);
+                dataGridView2.DataSource = failedDataTable;
                 dataGridView2.Visible = true;
 
-                CountBatch(dataTable);
-                ShowGraphics();
+                CountBatch(dataTable); // Usar todos los datos para el conteo
+                ShowGraphics(failedDataTable); // Mostrar gráficos solo con fallidos
             }
         }
 
+
         //Definir diagramas
-        private void ShowGraphics()
+        private void ShowGraphics(DataTable dataTable)
         {
             try
             {
-                var dataTable = LoadExcelData(filePath);
-
                 // Filtrar las filas donde el Batch Status sea "FAILED"
                 var failedDataTable = dataTable.AsEnumerable()
                     .Where(row => row["Batch Status"].ToString() == "FAILED")
@@ -148,7 +152,7 @@ namespace TableAnalizer
 
 
         //Carga los datos de las tablas
-        public System.Data.DataTable LoadExcelData(string filePath, bool filterColumns = false, bool filterFailed = false)
+        public System.Data.DataTable LoadExcelData(string filePath, bool filterColumns = false, bool filterFailed = false, bool applyDateFilter = false)
         {
             var dataTable = new System.Data.DataTable();
             DateTime fromDate = FromDate.Value;
@@ -172,7 +176,6 @@ namespace TableAnalizer
         "Actual Dye Conc 2", "Actual Dye Conc 1"
     };
 
-            // Define las columnas "especiales"
             var columnsToShow = new List<string>
     {
         "Batch Id", "Machine Name", "Total Cheeses", "Fibre Type", "Colour Group", "Batch Status", "Substr Code",
@@ -212,7 +215,7 @@ namespace TableAnalizer
                                 break;
                             }
 
-                            if (isFromDateSet && isToDateSet && columnName == "Machine Out")
+                            if (applyDateFilter && columnName == "Machine Out")
                             {
                                 DateTime machineOutDate = DateTime.Parse(worksheet.Cells[row, col].Text);
                                 if (machineOutDate < fromDate || machineOutDate > toDate)
@@ -236,7 +239,7 @@ namespace TableAnalizer
 
             return dataTable;
         }
-
+        
         //Pinta de rojo los que no pasaron
         private void DataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
@@ -341,7 +344,7 @@ namespace TableAnalizer
                 CountBatch(dataTable);
 
                 // Regenerar las gráficas
-                ShowGraphics();
+                ShowGraphics(dataTable);
             }
         }
 
@@ -606,8 +609,10 @@ namespace TableAnalizer
             if (page <= 4)
             {
                 page++;
-                ShowGraphics();
 
+                // Cargar el DataTable filtrado
+                var failedDataTable = LoadExcelData(filePath, filterColumns: false, filterFailed: true, applyDateFilter: true);
+                ShowGraphics(failedDataTable);
             }
         }
 
@@ -616,7 +621,8 @@ namespace TableAnalizer
             if (page >= 2 )
             {
                 page--;
-                ShowGraphics();
+                var failedDataTable = LoadExcelData(filePath, filterColumns: false, filterFailed: true, applyDateFilter: true);
+                ShowGraphics(failedDataTable);
 
             }
         }
@@ -637,10 +643,18 @@ namespace TableAnalizer
         {
             if (isFromDateSet && isToDateSet)
             {
-                var dataTable = LoadExcelData(filePath, filterColumns: true, filterFailed: true);
+                // Cargar todos los datos aplicando el filtro de fecha
+                var dataTable = LoadExcelData(filePath, filterColumns: false, filterFailed: false, applyDateFilter: true);
                 dataGridView1.DataSource = dataTable;
-                CountBatch(dataTable);
-                ShowGraphics();
+                dataGridView1.Visible = true;
+
+                // Cargar solo los fallidos aplicando el filtro de fecha
+                var failedDataTable = LoadExcelData(filePath, filterColumns: false, filterFailed: true, applyDateFilter: true);
+                dataGridView2.DataSource = failedDataTable;
+                dataGridView2.Visible = true;
+
+                CountBatch(dataTable); // Usar todos los datos para el conteo
+                ShowGraphics(failedDataTable); // Mostrar gráficos solo con fallidos
             }
         }
     }
