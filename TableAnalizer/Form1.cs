@@ -518,21 +518,26 @@ namespace TableAnalizer
             // Customize the color palette to include 15 tones
             var pastelColors = new List<Color>
             {
-                Color.FromArgb(119, 221, 119),  // Darker Pastel Green
-                Color.FromArgb(255, 105, 97),   // Darker Pastel Pink
-                Color.FromArgb(255, 179, 71),   // Darker Pastel Orange
-                Color.FromArgb(253, 253, 150),  // Darker Pastel Yellow
-                Color.FromArgb(119, 158, 203),  // Darker Pastel Blue
-                Color.FromArgb(204, 153, 255),  // Darker Pastel Purple
-                Color.FromArgb(255, 204, 204),  // Darker Pastel Peach
-                Color.FromArgb(255, 255, 204),  // Darker Pastel Lemon
-                Color.FromArgb(204, 255, 204),  // Darker Pastel Mint
-                Color.FromArgb(204, 229, 255),  // Darker Pastel Sky Blue
-                Color.FromArgb(255, 204, 229),  // Darker Pastel Magenta
-                Color.FromArgb(255, 229, 204),  // Darker Pastel Coral
-                Color.FromArgb(229, 204, 255),  // Darker Pastel Lavender
-                Color.FromArgb(204, 255, 229),  // Darker Pastel Aqua
-                Color.FromArgb(255, 255, 229)   // Darker Pastel Cream
+               Color.FromArgb(119, 221, 119),  // Pastel Green
+                Color.FromArgb(174, 198, 207),  // Pastel Blue
+                Color.FromArgb(253, 253, 150),  // Pastel Yellow
+                Color.FromArgb(207, 207, 255),  // Pastel Purple
+                Color.FromArgb(170, 240, 209),  // Pastel Mint
+                Color.FromArgb(178, 223, 238),  // Pastel Aqua
+                Color.FromArgb(255, 218, 185),  // Pastel Peach
+                Color.FromArgb(230, 230, 250),  // Pastel Lavender
+                Color.FromArgb(118, 215, 196),  // Pastel Turquoise
+                Color.FromArgb(217, 234, 211),  // Pastel Lime
+                Color.FromArgb(135, 206, 235),  // Pastel Sky Blue
+                Color.FromArgb(255, 182, 193),  // Light Pink
+                Color.FromArgb(255, 250, 205),  // Pastel Lemon
+                Color.FromArgb(240, 255, 255),  // Pastel Azure
+                Color.FromArgb(255, 221, 193),  // Pastel Coral
+                Color.FromArgb(153, 204, 204),  // Pastel Teal
+                Color.FromArgb(178, 190, 181),  // Pastel Olive
+                Color.FromArgb(245, 245, 220),  // Pastel Beige
+                Color.FromArgb(255, 255, 240),  // Pastel Ivory
+                Color.FromArgb(159, 226, 191)   // Pastel Seafoam
             };
 
             for (int i = 0; i < data.Count; i++)
@@ -549,7 +554,8 @@ namespace TableAnalizer
                 if (!allEqual && percentage == maxPercentage)
                 {
                     point["Exploded"] = "true"; // Separar el sector con mayor porcentaje
-                    point.Color = Color.FromArgb(135, 206, 250); 
+                    point.Color = Color.FromArgb(255, 136, 2);
+
                 }
 
                 series.Points.Add(point);
@@ -569,24 +575,24 @@ namespace TableAnalizer
                     chart.Legends.Clear();
                     chart.ChartAreas.Add(chartArea);
                     chartArea.Area3DStyle.Enable3D = true;
-                    chartArea.Position = new ElementPosition(0, 0, 105, 105); 
-                    chartArea.InnerPlotPosition = new ElementPosition(10, 10, 85, 85); 
+                    chartArea.Position = new ElementPosition(0, 0, 105, 105);
+                    chartArea.InnerPlotPosition = new ElementPosition(10, 10, 85, 85);
                 }
                 else
                 {
-                    point.LegendText = $"{point.AxisLabel} ";  
+                    point.LegendText = $"{point.AxisLabel} ";
                     var legend = chart.Legends["Legend"];
-                    legend.Docking = Docking.Bottom; 
-                    legend.AutoFitMinFontSize = 5; 
-                    legend.Font = new Font("Arial", 8); 
+                    legend.Docking = Docking.Bottom;
+                    legend.AutoFitMinFontSize = 5;
+                    legend.Font = new Font("Arial", 8);
                     legend.IsTextAutoFit = true;
 
                     var chartArea = new ChartArea();
                     chart.ChartAreas.Clear();
                     chart.ChartAreas.Add(chartArea);
-                    chartArea.Area3DStyle.Enable3D = true; 
-                    chartArea.Position = new ElementPosition(0, 0, 95, 95); 
-                    chartArea.InnerPlotPosition = new ElementPosition(10, 10, 80, 80); 
+                    chartArea.Area3DStyle.Enable3D = true;
+                    chartArea.Position = new ElementPosition(0, 0, 95, 95);
+                    chartArea.InnerPlotPosition = new ElementPosition(10, 10, 80, 80);
                 }
             }
         }
