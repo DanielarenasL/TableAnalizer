@@ -28,6 +28,7 @@ namespace TableAnalizer
         private int page = 1;
         private bool isFromDateSet = false;
         private bool isToDateSet = false;
+        public string FilePath => filePath;
 
         //Constructor 
         public Form1()
@@ -43,7 +44,7 @@ namespace TableAnalizer
 
             dataGridView1.CellFormatting += DataGridView_CellFormatting;
             dataGridView2.CellFormatting += DataGridView_CellFormatting;
-            dataGridView1.Visible = true;
+            dataGridView1.Visible = false;
             dataGridView2.Visible = false;
 
 
@@ -107,15 +108,13 @@ namespace TableAnalizer
             {
                 filePath = openFileDialog1.FileName;
 
-                // Cargar todos los datos aplicando el filtro de fecha
                 var dataTable = LoadExcelData(filePath, filterColumns: false, filterFailed: false, applyDateFilter: true);
                 dataGridView1.DataSource = dataTable;
-                dataGridView1.Visible = true;
+                dataGridView1.Visible = false;
 
-                // Cargar solo los fallidos aplicando el filtro de fecha
                 var failedDataTable = LoadExcelData(filePath, filterColumns: false, filterFailed: true, applyDateFilter: true);
                 dataGridView2.DataSource = failedDataTable;
-                dataGridView2.Visible = true;
+                dataGridView2.Visible = false;
 
                 CountBatch(dataTable); // Usar todos los datos para el conteo
                 ShowGraphics(failedDataTable); // Mostrar gráficos solo con fallidos
@@ -134,11 +133,11 @@ namespace TableAnalizer
                     .CopyToDataTable();
 
                 var columnsToShow = new List<string>
-        {
-            "Machine Name", "Total Cheeses", "Fibre Type", "Colour Group", "Substr Code",
-            "Count/Ply", "Dyeclass(es)", "Total Dye Conc Stage 1", "Total Dye Conc Stage 2", "Dyeing Method", "Recipe Status",
-            "Recipe Type", "Colour Category", "Prescreen User", "Prescreen Procedure Path", "Shift", "Worker"
-        };
+                {
+                    "Machine Name", "Total Cheeses", "Fibre Type", "Colour Group", "Substr Code",
+                    "Count/Ply", "Dyeclass(es)", "Total Dye Conc Stage 1", "Total Dye Conc Stage 2", "Dyeing Method", "Recipe Status",
+                    "Recipe Type", "Colour Category", "Prescreen User", "Prescreen Procedure Path", "Shift", "Worker"
+                };
 
                 ShowPieCharts(failedDataTable, columnsToShow);
             }
@@ -148,7 +147,6 @@ namespace TableAnalizer
             }
         }
 
-        public string FilePath => filePath;
 
 
         //Carga los datos de las tablas
@@ -218,7 +216,7 @@ namespace TableAnalizer
                             if (applyDateFilter && columnName == "Machine Out")
                             {
                                 DateTime machineOutDate = DateTime.Parse(worksheet.Cells[row, col].Text);
-                                if (machineOutDate < fromDate || machineOutDate > toDate)
+                                if (!(machineOutDate >= fromDate && machineOutDate <= toDate))
                                 {
                                     addRow = false;
                                     break;
@@ -239,6 +237,9 @@ namespace TableAnalizer
 
             return dataTable;
         }
+
+
+
         //Pinta de rojo los que no pasaron
         private void DataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
@@ -570,23 +571,23 @@ namespace TableAnalizer
                     chart.Legends.Clear();
                     chart.ChartAreas.Add(chartArea);
                     chartArea.Area3DStyle.Enable3D = true;
-                    chartArea.Position = new ElementPosition(0, 0, 105, 105); // Adjust the position and size
+                    chartArea.Position = new ElementPosition(0, 0, 105, 105); 
                     chartArea.InnerPlotPosition = new ElementPosition(10, 10, 85, 85); 
                 }
                 else
                 {
                     point.LegendText = $"{point.AxisLabel} ";  
                     var legend = chart.Legends["Legend"];
-                    legend.Docking = Docking.Bottom; // Position the legend on the right
-                    legend.AutoFitMinFontSize = 5; // Set minimum font size to auto fit
-                    legend.Font = new Font("Arial", 8); // Adjust the font size to make it smaller
+                    legend.Docking = Docking.Bottom; 
+                    legend.AutoFitMinFontSize = 5; 
+                    legend.Font = new Font("Arial", 8); 
                     legend.IsTextAutoFit = true;
 
                     var chartArea = new ChartArea();
                     chart.ChartAreas.Clear();
                     chart.ChartAreas.Add(chartArea);
                     chartArea.Area3DStyle.Enable3D = true; 
-                    chartArea.Position = new ElementPosition(0, 0, 95, 95); // Adjust the position and size
+                    chartArea.Position = new ElementPosition(0, 0, 95, 95); 
                     chartArea.InnerPlotPosition = new ElementPosition(10, 10, 80, 80); 
                 }
             }
@@ -609,7 +610,6 @@ namespace TableAnalizer
             {
                 page++;
 
-                // Cargar el DataTable filtrado
                 var failedDataTable = LoadExcelData(filePath, filterColumns: false, filterFailed: true, applyDateFilter: true);
                 ShowGraphics(failedDataTable);
             }
@@ -642,18 +642,14 @@ namespace TableAnalizer
         {
             if (isFromDateSet && isToDateSet)
             {
-                // Cargar todos los datos aplicando el filtro de fecha
                 var dataTable = LoadExcelData(filePath, filterColumns: false, filterFailed: false, applyDateFilter: true);
                 dataGridView1.DataSource = dataTable;
-                dataGridView1.Visible = true;
 
-                // Cargar solo los fallidos aplicando el filtro de fecha
                 var failedDataTable = LoadExcelData(filePath, filterColumns: false, filterFailed: true, applyDateFilter: true);
                 dataGridView2.DataSource = failedDataTable;
-                dataGridView2.Visible = true;
 
-                CountBatch(dataTable); // Usar todos los datos para el conteo
-                ShowGraphics(failedDataTable); // Mostrar gráficos solo con fallidos
+                CountBatch(dataTable); 
+                ShowGraphics(failedDataTable); 
             }
         }
     }
