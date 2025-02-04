@@ -38,6 +38,7 @@ namespace TableAnalizer
 
             InitializeComponent();
 
+
             openFileDialog1 = new OpenFileDialog();         //Crea la funcion para abrir el archivo
 
             this.WindowState = FormWindowState.Maximized;       //Al ejecutar, la ventana siempre esta maximizada
@@ -569,9 +570,12 @@ namespace TableAnalizer
                     var result = chart.HitTest(e.X, e.Y);
                     if (result.ChartElementType == ChartElementType.DataPoint && maxPoints.Contains(result.Object as DataPoint))
                     {
+                        DataTable failedDataTable = dataGridView2.DataSource as DataTable;
+
                         var point = result.Object as DataPoint;
                         tooltip.SetToolTip(chart, $"{point.AxisLabel}  Cantidad: {point.YValues[0]}/{dataTable.Rows.Count}");
-                        
+
+                        ShowStatisticsMessage(failedDataTable, point);
                     }
                     else
                     {
@@ -673,26 +677,9 @@ namespace TableAnalizer
             }
         }
 
-        private void MoreDetails(DataTable dataTable)
-        {
-            
-        }
-        private void BtnShowStatistics_Click(object sender, EventArgs e)
-        {
-            // Obtener los datos del dataGridView2 (que ya están filtrados como erróneos)
-            DataTable failedDataTable = dataGridView2.DataSource as DataTable;
 
-            if (failedDataTable != null)
-            {
-                ShowStatisticsMessage(failedDataTable); // Mostrar estadísticas detalladas
-            }
-            else
-            {
-                MessageBox.Show("No hay datos disponibles en dataGridView2.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
 
-        private void ShowStatisticsMessage(DataTable dataTable)
+        private void ShowStatisticsMessage(DataTable dataTable, DataPoint point)
         {
             try
             {
