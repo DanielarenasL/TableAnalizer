@@ -677,20 +677,7 @@ namespace TableAnalizer
         {
             
         }
-        private void BtnShowStatistics_Click(object sender, EventArgs e)
-        {
-            // Obtener los datos del dataGridView2 (que ya están filtrados como erróneos)
-            DataTable failedDataTable = dataGridView2.DataSource as DataTable;
 
-            if (failedDataTable != null)
-            {
-                ShowStatisticsMessage(failedDataTable); // Mostrar estadísticas detalladas
-            }
-            else
-            {
-                MessageBox.Show("No hay datos disponibles en dataGridView2.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
 
         private void ShowStatisticsMessage(DataTable dataTable)
         {
@@ -745,6 +732,19 @@ namespace TableAnalizer
             }
         }
 
+        private void BtnShowStatistics_Click(object sender, EventArgs e)
+        {
+            // Obtener los datos del dataGridView2 (que ya están filtrados como erróneos)
+            DataTable failedDataTable = dataGridView2.DataSource as DataTable;
 
+            if (failedDataTable != null)
+            {
+                ShowStatisticsMessage(failedDataTable); // Mostrar estadísticas detalladas
+            }
+            else
+            {
+                MessageBox.Show("No hay datos disponibles en dataGridView2.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }
