@@ -673,16 +673,40 @@ namespace TableAnalizer
             }
         }
 
-        private void MoreDetails(DataTable dataTable)
-        {
-            
-        }
+
 
 
         private void ShowStatisticsMessage(DataTable dataTable)
         {
             try
             {
+                // Crear un formulario personalizado para mostrar el mensaje
+                void ShowCustomMessageBox(string message)
+                {
+                    Form form = new Form();
+                    Label messageLabel = new Label();
+                    Button okButton = new Button();
+
+                    form.Text = "Mensaje";
+                    form.StartPosition = FormStartPosition.CenterScreen;
+                    form.ClientSize = new Size(500, 400);
+
+                    messageLabel.Text = message;
+                    messageLabel.Font = new Font("Arial", 14); // Cambia el tamaño de la fuente aquí
+                    messageLabel.AutoSize = true;
+                    messageLabel.Location = new Point(10, 10);
+                    messageLabel.MaximumSize = new Size(480, 0);
+
+                    okButton.Text = "OK";
+                    okButton.Size = new Size(80, 30);
+                    okButton.Location = new Point(210, 350);
+                    okButton.Click += (sender, e) => { form.Close(); };
+
+                    form.Controls.Add(messageLabel);
+                    form.Controls.Add(okButton);
+                    form.ShowDialog();
+                }
+
                 // Calcular los porcentajes y conteos para "Substr Code"
                 var substrGroups = dataTable.AsEnumerable()
                     .GroupBy(row => row["Substr Code"].ToString())
@@ -698,7 +722,7 @@ namespace TableAnalizer
                 if (substrGroups.Count > 0)
                 {
                     var mostFailedSubstr = substrGroups.First();
-                    string message = $"El Substr que más falló fue: {mostFailedSubstr.SubstrCode} con {mostFailedSubstr.Count} fallos ({mostFailedSubstr.Percentage:F2}%).\n";
+                    string message = $"El Substrato que más falló fue: {mostFailedSubstr.SubstrCode} con {mostFailedSubstr.Count} fallos ({mostFailedSubstr.Percentage:F2}%).\n";
 
                     // Calcular los porcentajes y conteos para "Count/Ply" dentro del Substr que más falló
                     var countPlyGroups = dataTable.AsEnumerable()
@@ -716,21 +740,70 @@ namespace TableAnalizer
                     if (countPlyGroups.Count > 0)
                     {
                         var mostCommonCountPly = countPlyGroups.First();
-                        message += $"De esos {mostFailedSubstr.SubstrCode}, el {mostCommonCountPly.Percentage:F2}% fueron {mostCommonCountPly.CountPly}.";
+                        message += $"De esos {mostFailedSubstr.SubstrCode}, {mostCommonCountPly.Count}({mostCommonCountPly.Percentage:F2})% fueron {mostCommonCountPly.CountPly}.\n";
+
+                        // Calcular los porcentajes y conteos para "Fiber Type" dentro del Count/Ply más común
+                        var fiberTypeGroups = dataTable.AsEnumerable()
+                            .Where(row => row["Substr Code"].ToString() == mostFailedSubstr.SubstrCode && row["Count/Ply"].ToString() == mostCommonCountPly.CountPly)
+                            .GroupBy(row => row["Fibre Type"].ToString())
+                            .Select(group => new
+                            {
+                                FiberType = group.Key,
+                                Count = group.Count(),
+                                Percentage = (double)group.Count() / mostCommonCountPly.Count * 100
+                            })
+                            .OrderByDescending(x => x.Count)
+                            .ToList();
+
+                        if (fiberTypeGroups.Count > 0)
+                        {
+                            message += "\nDesglose por tipo de fibra:\n\n";
+                            foreach (var fiber in fiberTypeGroups)
+                            {
+                                message += $"  - {fiber.FiberType}: {fiber.Count} ({fiber.Percentage:F2}%)\n";
+                            }
+                            message += "\n";
+                        }
+
+                        // Calcular los porcentajes y conteos para "Dyeing Method" dentro del Count/Ply más común
+                        var dyeingMethodGroups = dataTable.AsEnumerable()
+                            .Where(row => row["Substr Code"].ToString() == mostFailedSubstr.SubstrCode && row["Count/Ply"].ToString() == mostCommonCountPly.CountPly)
+                            .GroupBy(row => row["Dyeing Method"].ToString())
+                            .Select(group => new
+                            {
+                                DyeingMethod = group.Key,
+                                Count = group.Count(),
+                                Percentage = (double)group.Count() / mostCommonCountPly.Count * 100
+                            })
+                            .OrderByDescending(x => x.Count)
+                            .ToList();
+
+                        if (dyeingMethodGroups.Count > 0)
+                        {
+                            message += "Desglose por método de teñido:\n\n";
+                            foreach (var method in dyeingMethodGroups)
+                            {
+                                message += $"  - {method.DyeingMethod}: {method.Count} ({method.Percentage:F2}%)\n";
+                            }
+                            message += "\n";
+
+                        }
                     }
 
-                    MessageBox.Show(message, "Estadísticas de Fallos", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    ShowCustomMessageBox(message);
                 }
                 else
                 {
-                    MessageBox.Show("No hay datos de fallos disponibles.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    ShowCustomMessageBox("No hay datos de fallos disponibles.");
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ocurrió un error al calcular las estadísticas detalladas: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Ocurrió un error al calcular las estadísticas detalladas: {ex.Message}");
             }
         }
+
+
 
         private void BtnShowStatistics_Click(object sender, EventArgs e)
         {
