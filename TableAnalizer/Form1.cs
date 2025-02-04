@@ -134,9 +134,9 @@ namespace TableAnalizer
 
                 var columnsToShow = new List<string>
                 {
-                    "Machine Name", "Total Cheeses", "Fibre Type", "Colour Group", "Substr Code",
-                    "Count/Ply", "Dyeclass(es)", "Total Dye Conc Stage 1", "Total Dye Conc Stage 2", "Dyeing Method", "Recipe Status",
-                    "Recipe Type", "Colour Category", "Prescreen User", "Prescreen Procedure Path", "Shift", "Worker"
+                    "Substr Code", "Count/Ply", "Dyeclass(es)", "Total Dye Conc Stage 2", "Machine Name", "Total Cheeses", "Fibre Type", "Colour Group", 
+                    "Dyeing Method", "Recipe Status", "Recipe Type", "Colour Category", "Prescreen User", "Prescreen Procedure Path", 
+                    "Shift", "Worker", "Failure Reason"
                 };
 
                 ShowPieCharts(failedDataTable, columnsToShow);
@@ -157,28 +157,28 @@ namespace TableAnalizer
             DateTime toDate = ToDate.Value.Date;
 
             var originalColumns = new List<string>
-    {
-        "Batch Id", "Dyelot Date", "Orders", "Shade Name", "Max Colour Diff", "Batch Status",
-        "Substr Code", "Count/Ply", "Thread Quality", "Fibre Type", "Dyeing Method", "Recipe Status",
-        "Delta L", "Delta c", "Delta h", "Machine Name", "Machine Vol", "Total Cheeses", "Total Batch Weight",
-        "Failure Reason", "Dyeclass(es)", "Dye Triangle 1", "Dye Code 1", "Dye Code 2", "Dye Code 3",
-        "Total Dye Conc Stage 1", "Dye Triangle 2", "Dye Code 4", "Dye Code 5", "Dye Code 6",
-        "Total Dye Conc Stage 2", "Worker", "Shift", "Machine In", "Machine Out", "Dyelot Comments",
-        "Shade Desc", "Shade Card", "Recipe Type", "Material Code", "Customers", "Lub Type", "Unfinished Stnd Type",
-        "L", "A", "B", "Chroma", "Hue", "Recipe Type Code", "No. of Passed Cheeses", "Producer", "Finish Type",
-        "Fastness Type", "Dyed From", "Comment", "Colour Category", "Article", "Source Dyehouse", "Speedline Priority",
-        "Unlevel", "Recipe Version No Minor", "Recipe Version No", "Update Date", "Updated By", "Update Method",
-        "Thread Group", "Prescreen User", "Prescreen Procedure Path", "Pass Fail Date", "Order Created", "Colour Group",
-        "Delta Hue Descriptor", "Actual Dye Conc 6", "Actual Dye Conc 5", "Actual Dye Conc 4", "Actual Dye Conc 3",
-        "Actual Dye Conc 2", "Actual Dye Conc 1"
-    };
+            {
+                "Batch Id", "Dyelot Date", "Orders", "Shade Name", "Max Colour Diff", "Batch Status",
+                "Substr Code", "Count/Ply", "Thread Quality", "Fibre Type", "Dyeing Method", "Recipe Status",
+                "Delta L", "Delta c", "Delta h", "Machine Name", "Machine Vol", "Total Cheeses", "Total Batch Weight",
+                "Failure Reason", "Dyeclass(es)", "Dye Triangle 1", "Dye Code 1", "Dye Code 2", "Dye Code 3",
+                "Total Dye Conc Stage 1", "Dye Triangle 2", "Dye Code 4", "Dye Code 5", "Dye Code 6",
+                "Total Dye Conc Stage 2", "Worker", "Shift", "Machine In", "Machine Out", "Dyelot Comments",
+                "Shade Desc", "Shade Card", "Recipe Type", "Material Code", "Customers", "Lub Type", "Unfinished Stnd Type",
+                "L", "A", "B", "Chroma", "Hue", "Recipe Type Code", "No. of Passed Cheeses", "Producer", "Finish Type",
+                "Fastness Type", "Dyed From", "Comment", "Colour Category", "Article", "Source Dyehouse", "Speedline Priority",
+                "Unlevel", "Recipe Version No Minor", "Recipe Version No", "Update Date", "Updated By", "Update Method",
+                "Thread Group", "Prescreen User", "Prescreen Procedure Path", "Pass Fail Date", "Order Created", "Colour Group",
+                "Delta Hue Descriptor", "Actual Dye Conc 6", "Actual Dye Conc 5", "Actual Dye Conc 4", "Actual Dye Conc 3",
+                "Actual Dye Conc 2", "Actual Dye Conc 1"
+            };
 
             var columnsToShow = new List<string>
-    {
-        "Batch Id", "Machine Name", "Total Cheeses", "Fibre Type", "Colour Group", "Batch Status", "Substr Code",
-        "Count/Ply", "Dyeclass(es)", "Total Dye Conc Stage 1", "Total Dye Conc Stage 2", "Dyeing Method", "Recipe Status",
-        "Recipe Type", "Colour Category", "Prescreen User", "Prescreen Procedure Path", "Shift", "Worker", "Machine Out"
-    };
+            {
+                "Batch Id", "Machine Name", "Total Cheeses", "Fibre Type", "Colour Group", "Batch Status", "Substr Code",
+                "Count/Ply", "Dyeclass(es)", "Total Dye Conc Stage 1", "Total Dye Conc Stage 2", "Dyeing Method", "Recipe Status",
+                "Recipe Type", "Colour Category", "Prescreen User", "Prescreen Procedure Path", "Shift", "Worker", "Machine Out", "Failure Reason"
+            };
 
             using (var package = new ExcelPackage(new System.IO.FileInfo(filePath)))
             {
@@ -305,11 +305,6 @@ namespace TableAnalizer
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
         }
@@ -474,6 +469,7 @@ namespace TableAnalizer
                 panel.Size = new System.Drawing.Size(410, 480);
                 panel.BringToFront();
             }
+            chartPanel17.Size = new System.Drawing.Size(820, 960);
 
             for (int i = 0; i < columnsToShow.Count && i < panels.Count; i++)
             {
@@ -516,28 +512,28 @@ namespace TableAnalizer
             bool allEqual = data.All(d => (d.Count / (double)dataTable.Rows.Count) * 100 == maxPercentage);
 
             var pastelColors = new List<Color>
-    {
-        Color.FromArgb(119, 221, 119),  // Pastel Green
-        Color.FromArgb(174, 198, 207),  // Pastel Blue
-        Color.FromArgb(253, 253, 150),  // Pastel Yellow
-        Color.FromArgb(207, 207, 255),  // Pastel Purple
-        Color.FromArgb(170, 240, 209),  // Pastel Mint
-        Color.FromArgb(178, 223, 238),  // Pastel Aqua
-        Color.FromArgb(255, 218, 185),  // Pastel Peach
-        Color.FromArgb(230, 230, 250),  // Pastel Lavender
-        Color.FromArgb(118, 215, 196),  // Pastel Turquoise
-        Color.FromArgb(217, 234, 211),  // Pastel Lime
-        Color.FromArgb(135, 206, 235),  // Pastel Sky Blue
-        Color.FromArgb(255, 182, 193),  // Light Pink
-        Color.FromArgb(255, 250, 205),  // Pastel Lemon
-        Color.FromArgb(240, 255, 255),  // Pastel Azure
-        Color.FromArgb(255, 221, 193),  // Pastel Coral
-        Color.FromArgb(153, 204, 204),  // Pastel Teal
-        Color.FromArgb(178, 190, 181),  // Pastel Olive
-        Color.FromArgb(245, 245, 220),  // Pastel Beige
-        Color.FromArgb(255, 255, 240),  // Pastel Ivory
-        Color.FromArgb(159, 226, 191)   // Pastel Seafoam
-    };
+            {
+                Color.FromArgb(119, 221, 119),  // Pastel Green
+                Color.FromArgb(174, 198, 207),  // Pastel Blue
+                Color.FromArgb(253, 253, 150),  // Pastel Yellow
+                Color.FromArgb(207, 207, 255),  // Pastel Purple
+                Color.FromArgb(170, 240, 209),  // Pastel Mint
+                Color.FromArgb(178, 223, 238),  // Pastel Aqua
+                Color.FromArgb(255, 218, 185),  // Pastel Peach
+                Color.FromArgb(230, 230, 250),  // Pastel Lavender
+                Color.FromArgb(118, 215, 196),  // Pastel Turquoise
+                Color.FromArgb(217, 234, 211),  // Pastel Lime
+                Color.FromArgb(135, 206, 235),  // Pastel Sky Blue
+                Color.FromArgb(255, 182, 193),  // Light Pink
+                Color.FromArgb(255, 250, 205),  // Pastel Lemon
+                Color.FromArgb(240, 255, 255),  // Pastel Azure
+                Color.FromArgb(255, 221, 193),  // Pastel Coral
+                Color.FromArgb(153, 204, 204),  // Pastel Teal
+                Color.FromArgb(178, 190, 181),  // Pastel Olive
+                Color.FromArgb(245, 245, 220),  // Pastel Beige
+                Color.FromArgb(255, 255, 240),  // Pastel Ivory
+                Color.FromArgb(159, 226, 191)   // Pastel Seafoam
+            };
 
             List<DataPoint> maxPoints = new List<DataPoint>();
 
@@ -574,7 +570,8 @@ namespace TableAnalizer
                     if (result.ChartElementType == ChartElementType.DataPoint && maxPoints.Contains(result.Object as DataPoint))
                     {
                         var point = result.Object as DataPoint;
-                        tooltip.SetToolTip(chart, $"{point.AxisLabel}: {point.YValues[0]}/{dataTable.Rows.Count}");
+                        tooltip.SetToolTip(chart, $"{point.AxisLabel}  Cantidad: {point.YValues[0]}/{dataTable.Rows.Count}");
+                        
                     }
                     else
                     {
@@ -676,64 +673,78 @@ namespace TableAnalizer
             }
         }
 
-        private void InitializeCharts()
+        private void MoreDetails(DataTable dataTable)
         {
-            var chartPanels = new List<Panel>
-            {
-                chartPanel1, chartPanel2, chartPanel3, chartPanel4, chartPanel5, chartPanel6, chartPanel7, chartPanel8,
-                chartPanel9, chartPanel10, chartPanel11, chartPanel12, chartPanel13, chartPanel14, chartPanel15, chartPanel16, chartPanel17
-            };
-
-            foreach (var panel in chartPanels)
-            {
-                if (panel != null)
-                {
-                    var chart = new Chart();
-                    chart.Dock = DockStyle.Fill;
-                    chart.ChartAreas.Add(new ChartArea());
-
-                    // Suscribirse a los eventos de mouse
-                    chart.MouseMove += Chart_MouseMove;
-                    chart.MouseLeave += Chart_MouseLeave;
-
-                    panel.Controls.Add(chart);
-                }
-            }
+            
         }
-
-        private void Chart_MouseMove(object sender, MouseEventArgs e)
+        private void BtnShowStatistics_Click(object sender, EventArgs e)
         {
-            var chart = sender as Chart;
-            var result = chart.HitTest(e.X, e.Y);
+            // Obtener los datos del dataGridView2 (que ya están filtrados como erróneos)
+            DataTable failedDataTable = dataGridView2.DataSource as DataTable;
 
-            if (result.ChartElementType == ChartElementType.DataPoint)
+            if (failedDataTable != null)
             {
-                var point = result.Series.Points[result.PointIndex];
-                point.BackSecondaryColor = System.Drawing.Color.Red;
-                point.BackGradientStyle = GradientStyle.DiagonalRight;
+                ShowStatisticsMessage(failedDataTable); // Mostrar estadísticas detalladas
             }
             else
             {
-                ResetPoints(chart);
+                MessageBox.Show("No hay datos disponibles en dataGridView2.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void Chart_MouseLeave(object sender, EventArgs e)
+        private void ShowStatisticsMessage(DataTable dataTable)
         {
-            var chart = sender as Chart;
-            ResetPoints(chart);
-        }
-
-        private void ResetPoints(Chart chart)
-        {
-            foreach (var series in chart.Series)
+            try
             {
-                foreach (var point in series.Points)
+                // Calcular los porcentajes y conteos para "Substr Code"
+                var substrGroups = dataTable.AsEnumerable()
+                    .GroupBy(row => row["Substr Code"].ToString())
+                    .Select(group => new
+                    {
+                        SubstrCode = group.Key,
+                        Count = group.Count(),
+                        Percentage = (double)group.Count() / dataTable.Rows.Count * 100
+                    })
+                    .OrderByDescending(x => x.Count)
+                    .ToList();
+
+                if (substrGroups.Count > 0)
                 {
-                    point.BackSecondaryColor = System.Drawing.Color.Empty;
-                    point.BackGradientStyle = GradientStyle.None;
+                    var mostFailedSubstr = substrGroups.First();
+                    string message = $"El Substr que más falló fue: {mostFailedSubstr.SubstrCode} con {mostFailedSubstr.Count} fallos ({mostFailedSubstr.Percentage:F2}%).\n";
+
+                    // Calcular los porcentajes y conteos para "Count/Ply" dentro del Substr que más falló
+                    var countPlyGroups = dataTable.AsEnumerable()
+                        .Where(row => row["Substr Code"].ToString() == mostFailedSubstr.SubstrCode)
+                        .GroupBy(row => row["Count/Ply"].ToString())
+                        .Select(group => new
+                        {
+                            CountPly = group.Key,
+                            Count = group.Count(),
+                            Percentage = (double)group.Count() / mostFailedSubstr.Count * 100
+                        })
+                        .OrderByDescending(x => x.Count)
+                        .ToList();
+
+                    if (countPlyGroups.Count > 0)
+                    {
+                        var mostCommonCountPly = countPlyGroups.First();
+                        message += $"De esos {mostFailedSubstr.SubstrCode}, el {mostCommonCountPly.Percentage:F2}% fueron {mostCommonCountPly.CountPly}.";
+                    }
+
+                    MessageBox.Show(message, "Estadísticas de Fallos", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("No hay datos de fallos disponibles.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ocurrió un error al calcular las estadísticas detalladas: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
+
+
     }
 }

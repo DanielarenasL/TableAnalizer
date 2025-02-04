@@ -50,6 +50,7 @@
             this.ToDate = new System.Windows.Forms.DateTimePicker();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.BtnShowStatistics = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
@@ -326,11 +327,22 @@
             this.label2.TabIndex = 26;
             this.label2.Text = "Hasta";
             // 
+            // BtnShowStatistics
+            // 
+            this.BtnShowStatistics.Location = new System.Drawing.Point(924, 885);
+            this.BtnShowStatistics.Name = "BtnShowStatistics";
+            this.BtnShowStatistics.Size = new System.Drawing.Size(186, 86);
+            this.BtnShowStatistics.TabIndex = 27;
+            this.BtnShowStatistics.Text = "button1";
+            this.BtnShowStatistics.UseVisualStyleBackColor = true;
+            this.BtnShowStatistics.Click += new System.EventHandler(this.BtnShowStatistics_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1284, 1005);
+            this.Controls.Add(this.BtnShowStatistics);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.ToDate);
@@ -406,5 +418,6 @@
         private System.Windows.Forms.DateTimePicker ToDate;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button BtnShowStatistics;
     }
 }
