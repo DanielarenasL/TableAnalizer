@@ -29,6 +29,9 @@ namespace TableAnalizer
         private bool isFromDateSet = false;
         private bool isToDateSet = false;
         public string FilePath => filePath;
+        private ToolTip chartToolTip;
+        private DataPoint lastDataPoint = null;
+
 
         //Constructor 
         public Form1()
@@ -37,7 +40,7 @@ namespace TableAnalizer
             OfficeOpenXml.ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
 
             InitializeComponent();
-
+            chartToolTip = new ToolTip();
 
             openFileDialog1 = new OpenFileDialog();         //Crea la funcion para abrir el archivo
 
@@ -513,28 +516,28 @@ namespace TableAnalizer
             bool allEqual = data.All(d => (d.Count / (double)dataTable.Rows.Count) * 100 == maxPercentage);
 
             var pastelColors = new List<Color>
-            {
-                Color.FromArgb(119, 221, 119),  // Pastel Green
-                Color.FromArgb(174, 198, 207),  // Pastel Blue
-                Color.FromArgb(253, 253, 150),  // Pastel Yellow
-                Color.FromArgb(207, 207, 255),  // Pastel Purple
-                Color.FromArgb(170, 240, 209),  // Pastel Mint
-                Color.FromArgb(178, 223, 238),  // Pastel Aqua
-                Color.FromArgb(255, 218, 185),  // Pastel Peach
-                Color.FromArgb(230, 230, 250),  // Pastel Lavender
-                Color.FromArgb(118, 215, 196),  // Pastel Turquoise
-                Color.FromArgb(217, 234, 211),  // Pastel Lime
-                Color.FromArgb(135, 206, 235),  // Pastel Sky Blue
-                Color.FromArgb(255, 182, 193),  // Light Pink
-                Color.FromArgb(255, 250, 205),  // Pastel Lemon
-                Color.FromArgb(240, 255, 255),  // Pastel Azure
-                Color.FromArgb(255, 221, 193),  // Pastel Coral
-                Color.FromArgb(153, 204, 204),  // Pastel Teal
-                Color.FromArgb(178, 190, 181),  // Pastel Olive
-                Color.FromArgb(245, 245, 220),  // Pastel Beige
-                Color.FromArgb(255, 255, 240),  // Pastel Ivory
-                Color.FromArgb(159, 226, 191)   // Pastel Seafoam
-            };
+    {
+        Color.FromArgb(119, 221, 119),  // Pastel Green
+        Color.FromArgb(174, 198, 207),  // Pastel Blue
+        Color.FromArgb(253, 253, 150),  // Pastel Yellow
+        Color.FromArgb(207, 207, 255),  // Pastel Purple
+        Color.FromArgb(170, 240, 209),  // Pastel Mint
+        Color.FromArgb(178, 223, 238),  // Pastel Aqua
+        Color.FromArgb(255, 218, 185),  // Pastel Peach
+        Color.FromArgb(230, 230, 250),  // Pastel Lavender
+        Color.FromArgb(118, 215, 196),  // Pastel Turquoise
+        Color.FromArgb(217, 234, 211),  // Pastel Lime
+        Color.FromArgb(135, 206, 235),  // Pastel Sky Blue
+        Color.FromArgb(255, 182, 193),  // Light Pink
+        Color.FromArgb(255, 250, 205),  // Pastel Lemon
+        Color.FromArgb(240, 255, 255),  // Pastel Azure
+        Color.FromArgb(255, 221, 193),  // Pastel Coral
+        Color.FromArgb(153, 204, 204),  // Pastel Teal
+        Color.FromArgb(178, 190, 181),  // Pastel Olive
+        Color.FromArgb(245, 245, 220),  // Pastel Beige
+        Color.FromArgb(255, 255, 240),  // Pastel Ivory
+        Color.FromArgb(159, 226, 191)   // Pastel Seafoam
+    };
 
             List<DataPoint> maxPoints = new List<DataPoint>();
 
@@ -561,28 +564,8 @@ namespace TableAnalizer
 
             chart.Series.Add(series);
 
-            ToolTip tooltip = new ToolTip();
-
-            if (maxPoints.Count > 0)
-            {
-                chart.MouseMove += (sender, e) =>
-                {
-                    var result = chart.HitTest(e.X, e.Y);
-                    if (result.ChartElementType == ChartElementType.DataPoint && maxPoints.Contains(result.Object as DataPoint))
-                    {
-                        DataTable failedDataTable = dataGridView2.DataSource as DataTable;
-
-                        var point = result.Object as DataPoint;
-                        tooltip.SetToolTip(chart, $"{point.AxisLabel}  Cantidad: {point.YValues[0]}/{dataTable.Rows.Count}");
-
-                        ShowStatisticsMessage(failedDataTable, point);
-                    }
-                    else
-                    {
-                        tooltip.SetToolTip(chart, string.Empty);
-                    }
-                };
-            }
+            // Usar el ToolTip global
+            chart.MouseMove += (sender, e) => Chart_MouseMove(sender, e, maxPoints); // Suscribirse al evento MouseMove con maxPoints
 
             foreach (var point in series.Points)
             {
@@ -615,6 +598,28 @@ namespace TableAnalizer
                     chartArea.Position = new ElementPosition(0, 0, 95, 95);
                     chartArea.InnerPlotPosition = new ElementPosition(10, 10, 80, 80);
                 }
+            }
+        }
+
+        private void Chart_MouseMove(object sender, MouseEventArgs e, List<DataPoint> maxPoints)
+        {
+            var chart = sender as Chart;
+            var result = chart.HitTest(e.X, e.Y);
+            if (result.ChartElementType == ChartElementType.DataPoint)
+            {
+                var point = result.Object as DataPoint;
+                if (point != null && maxPoints.Contains(point) && point != lastDataPoint)
+                {
+                    DataTable failedDataTable = dataGridView2.DataSource as DataTable;
+                    chartToolTip.Show($"{point.AxisLabel}  Cantidad: {point.YValues[0]}/{failedDataTable.Rows.Count}", chart, e.X + 15, e.Y + 15);
+                    ShowStatisticsMessage(failedDataTable, chart);
+                    lastDataPoint = point;
+                }
+            }
+            else
+            {
+                chartToolTip.Hide(chart);
+                lastDataPoint = null;
             }
         }
 
@@ -679,56 +684,49 @@ namespace TableAnalizer
 
 
 
-        private void ShowStatisticsMessage(DataTable dataTable, DataPoint point)
+        private void ShowStatisticsMessage(DataTable dataTable, Chart chart)
         {
-            try
+            // Calcular los porcentajes y conteos para "Substr Code"
+            var substrGroups = dataTable.AsEnumerable()
+                .GroupBy(row => row["Substr Code"].ToString())
+                .Select(group => new
+                {
+                    SubstrCode = group.Key,
+                    Count = group.Count(),
+                    Percentage = (double)group.Count() / dataTable.Rows.Count * 100
+                })
+                .OrderByDescending(x => x.Count)
+                .ToList();
+
+            if (substrGroups.Count > 0)
             {
-                // Calcular los porcentajes y conteos para "Substr Code"
-                var substrGroups = dataTable.AsEnumerable()
-                    .GroupBy(row => row["Substr Code"].ToString())
+                var mostFailedSubstr = substrGroups.First();
+                string message = $"El Substr que más falló fue: {mostFailedSubstr.SubstrCode} con {mostFailedSubstr.Count} fallos ({mostFailedSubstr.Percentage:F2}%). ";
+
+                // Calcular los porcentajes y conteos para "Count/Ply" dentro del Substr que más falló
+                var countPlyGroups = dataTable.AsEnumerable()
+                    .Where(row => row["Substr Code"].ToString() == mostFailedSubstr.SubstrCode)
+                    .GroupBy(row => row["Count/Ply"].ToString())
                     .Select(group => new
                     {
-                        SubstrCode = group.Key,
+                        CountPly = group.Key,
                         Count = group.Count(),
-                        Percentage = (double)group.Count() / dataTable.Rows.Count * 100
+                        Percentage = (double)group.Count() / mostFailedSubstr.Count * 100
                     })
                     .OrderByDescending(x => x.Count)
                     .ToList();
 
-                if (substrGroups.Count > 0)
+                if (countPlyGroups.Count > 0)
                 {
-                    var mostFailedSubstr = substrGroups.First();
-                    string message = $"El Substr que más falló fue: {mostFailedSubstr.SubstrCode} con {mostFailedSubstr.Count} fallos ({mostFailedSubstr.Percentage:F2}%).\n";
-
-                    // Calcular los porcentajes y conteos para "Count/Ply" dentro del Substr que más falló
-                    var countPlyGroups = dataTable.AsEnumerable()
-                        .Where(row => row["Substr Code"].ToString() == mostFailedSubstr.SubstrCode)
-                        .GroupBy(row => row["Count/Ply"].ToString())
-                        .Select(group => new
-                        {
-                            CountPly = group.Key,
-                            Count = group.Count(),
-                            Percentage = (double)group.Count() / mostFailedSubstr.Count * 100
-                        })
-                        .OrderByDescending(x => x.Count)
-                        .ToList();
-
-                    if (countPlyGroups.Count > 0)
-                    {
-                        var mostCommonCountPly = countPlyGroups.First();
-                        message += $"De esos {mostFailedSubstr.SubstrCode}, el {mostCommonCountPly.Percentage:F2}% fueron {mostCommonCountPly.CountPly}.";
-                    }
-
-                    MessageBox.Show(message, "Estadísticas de Fallos", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    var mostCommonCountPly = countPlyGroups.First();
+                    message += $"De esos {mostFailedSubstr.SubstrCode}, el {mostCommonCountPly.Percentage:F2}% fueron {mostCommonCountPly.CountPly}.";
                 }
-                else
-                {
-                    MessageBox.Show("No hay datos de fallos disponibles.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+
+                chartToolTip.SetToolTip(chart, message);
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show($"Ocurrió un error al calcular las estadísticas detalladas: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                chartToolTip.SetToolTip(chart, "No hay datos de fallos disponibles.");
             }
         }
 
