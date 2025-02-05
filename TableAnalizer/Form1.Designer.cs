@@ -82,7 +82,7 @@
             this.Limpiar.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.Limpiar.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Limpiar.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Limpiar.Location = new System.Drawing.Point(870, 697);
+            this.Limpiar.Location = new System.Drawing.Point(870, 667);
             this.Limpiar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Limpiar.Name = "Limpiar";
             this.Limpiar.Size = new System.Drawing.Size(337, 159);
@@ -152,7 +152,7 @@
             // 
             this.openDataGridViewButton.BackColor = System.Drawing.Color.Plum;
             this.openDataGridViewButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.openDataGridViewButton.Location = new System.Drawing.Point(870, 519);
+            this.openDataGridViewButton.Location = new System.Drawing.Point(870, 502);
             this.openDataGridViewButton.Name = "openDataGridViewButton";
             this.openDataGridViewButton.Size = new System.Drawing.Size(337, 159);
             this.openDataGridViewButton.TabIndex = 19;
@@ -330,11 +330,11 @@
             // 
             // BtnShowStatistics
             // 
-            this.BtnShowStatistics.Location = new System.Drawing.Point(924, 862);
+            this.BtnShowStatistics.Location = new System.Drawing.Point(924, 839);
             this.BtnShowStatistics.Name = "BtnShowStatistics";
             this.BtnShowStatistics.Size = new System.Drawing.Size(224, 102);
             this.BtnShowStatistics.TabIndex = 27;
-            this.BtnShowStatistics.Text = "button1";
+            this.BtnShowStatistics.Text = "Ver resumen";
             this.BtnShowStatistics.UseVisualStyleBackColor = true;
             this.BtnShowStatistics.Click += new System.EventHandler(this.BtnShowStatistics_Click);
             // 

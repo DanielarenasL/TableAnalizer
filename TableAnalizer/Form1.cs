@@ -264,6 +264,7 @@ namespace TableAnalizer
         }
 
         //Calcula las estadisticas
+        //Calcula las estadísticas
         private void CountBatch(DataTable dataTable)
         {
             try
@@ -313,11 +314,14 @@ namespace TableAnalizer
 
 
         //Limpia todo al seleccionar otro archivo
+        //Limpia todo al seleccionar otro archivo
         private void Limpiar_Click(object sender, EventArgs e)
         {
             // Limpiar los DataGrid
             dataGridView1.DataSource = null;
             dataGridView2.DataSource = null;
+
+            filePath = null;
 
             // Reiniciar contadores y porcentajes
             totalLotes = 0;
@@ -328,18 +332,18 @@ namespace TableAnalizer
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 filePath = openFileDialog1.FileName;
-                var dataTable = LoadExcelData(filePath);
 
-                // Asignar el DataTable al DataGrid correspondiente
+                // Recalcular contadores y estadísticas
+                var dataTable = LoadExcelData(filePath, filterColumns: false, filterFailed: false, applyDateFilter: true);
                 dataGridView1.DataSource = dataTable;
-                dataGridView1.Visible = true;
+                dataGridView1.Visible = false;
+
+                var failedDataTable = LoadExcelData(filePath, filterColumns: false, filterFailed: true, applyDateFilter: true);
+                dataGridView2.DataSource = failedDataTable;
                 dataGridView2.Visible = false;
 
-                // Calcular las estadísticas
-                CountBatch(dataTable);
-
-                // Regenerar las gráficas
-                ShowGraphics(dataTable);
+                CountBatch(dataTable); // Usar todos los datos para el conteo
+                ShowGraphics(failedDataTable); // Mostrar gráficos solo con fallidos
             }
         }
 
