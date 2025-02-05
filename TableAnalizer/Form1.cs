@@ -66,6 +66,7 @@ namespace TableAnalizer
                 label2.Visible = false;
                 FromDate.Visible = false;
                 ToDate.Visible = false;
+                BtnShowStatistics.Visible = false;
             }
             else
             {
@@ -78,6 +79,7 @@ namespace TableAnalizer
                 label2.Visible = true;
                 FromDate.Visible = true;
                 ToDate.Visible = true;
+                BtnShowStatistics.Visible = true;
             }
         }
 
