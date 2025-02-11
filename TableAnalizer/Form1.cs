@@ -646,19 +646,45 @@ namespace TableAnalizer
                         Label = "#VALY" // Mostrar valor en cada columna
                     };
 
+                    // Verificar el contenido de dataTable
+                    foreach (DataRow row in dataTable.Rows)
+                    {
+                        Console.WriteLine($"Unlevel: {row["Unlevel"]}, Substr Code: {row["Substr Code"]}");
+                    }
+
                     var filteredData = dataTable.AsEnumerable()
-                        .Where(row => row["Unlevel"].ToString() == "failed")
+                        .Where(row => row["Unlevel"].ToString() == "FALSE")
                         .GroupBy(row => row["Substr Code"].ToString())
                         .Select(g => new { SubstrCode = g.Key, Count = g.Count() })
                         .ToList();
 
+                    // Verificar el contenido de filteredData
+                    Console.WriteLine($"Filtered Data Count: {filteredData.Count}");
+                    foreach (var item in filteredData)
+                    {
+                        Console.WriteLine($"SubstrCode: {item.SubstrCode}, Count: {item.Count}");
+                    }
+
+                    if (filteredData.Count == 0)
+                    {
+                        Console.WriteLine("No data to display.");
+                        return; // Salir si no hay datos para mostrar
+                    }
+                    Random rnd = new Random();
                     foreach (var item in filteredData)
                     {
                         series.Points.AddXY(item.SubstrCode, item.Count);
+                        point.Color = Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256));
                     }
 
                     chart.Series.Add(series);
+
+                    // Limpiar controles previos si es necesario
+                    chartPanel18.Controls.Clear();
                     chartPanel18.Controls.Add(chart); // Agregar el gráfico al panel correspondiente
+
+                    // Verificar que el gráfico se ha añadido correctamente
+                    Console.WriteLine("Chart added to panel.");
                 }
                 else
                 {
