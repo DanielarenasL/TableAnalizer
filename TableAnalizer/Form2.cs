@@ -13,6 +13,8 @@ namespace TableAnalizer
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
             this.form1Instance = form1; ///Trae datos del form1
+            this.Text = "Show Tables"; // Cambiar el título de la ventana
+
         }
 
         //Trae las dos tablas del form1

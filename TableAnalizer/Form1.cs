@@ -27,6 +27,8 @@ namespace TableAnalizer
             OfficeOpenXml.ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
 
             InitializeComponent();
+            this.Text = "TableAnalizer"; // Cambiar el título de la ventana
+
 
             openFileDialog1 = new OpenFileDialog();         //Crea la funcion para abrir el archivo
 
@@ -778,19 +780,19 @@ namespace TableAnalizer
                     Label messageLabel = new Label();
                     Button okButton = new Button();
 
-                    form.Text = "Mensaje";
+                    form.Text = "Summary";
                     form.StartPosition = FormStartPosition.CenterScreen;
-                    form.ClientSize = new Size(500, 400);
+                    form.ClientSize = new Size(600, 600);
 
                     messageLabel.Text = message;
-                    messageLabel.Font = new Font("Arial", 14); // Cambia el tamaño de la fuente aquí
+                    messageLabel.Font = new Font("Arial", 12); // Cambia el tamaño de la fuente aquí
                     messageLabel.AutoSize = true;
                     messageLabel.Location = new Point(10, 10);
                     messageLabel.MaximumSize = new Size(480, 0);
 
                     okButton.Text = "OK";
                     okButton.Size = new Size(80, 30);
-                    okButton.Location = new Point(210, 350);
+                    okButton.Location = new Point(260, 550);
                     okButton.Click += (sender, e) => { form.Close(); };
 
                     form.Controls.Add(messageLabel);
@@ -812,72 +814,76 @@ namespace TableAnalizer
 
                 if (substrGroups.Count > 0)
                 {
-                    var mostFailedSubstr = substrGroups.First();
-                    string message = $"El Substrato que más falló fue: {mostFailedSubstr.SubstrCode} con {mostFailedSubstr.Count} fallos ({mostFailedSubstr.Percentage:F2}%).\n";
+                    var top2Substr = substrGroups.Take(2).ToList();
+                    string message = "";
 
-                    // Calcular los porcentajes y conteos para "Count/Ply" dentro del Substr que más falló
-                    var countPlyGroups = dataTable.AsEnumerable()
-                        .Where(row => row["Substr Code"].ToString() == mostFailedSubstr.SubstrCode)
-                        .GroupBy(row => row["Count/Ply"].ToString())
-                        .Select(group => new
-                        {
-                            CountPly = group.Key,
-                            Count = group.Count(),
-                            Percentage = (double)group.Count() / mostFailedSubstr.Count * 100
-                        })
-                        .OrderByDescending(x => x.Count)
-                        .ToList();
-
-                    if (countPlyGroups.Count > 0)
+                    foreach (var substr in top2Substr)
                     {
-                        var mostCommonCountPly = countPlyGroups.First();
-                        message += $"De esos {mostFailedSubstr.SubstrCode}, {mostCommonCountPly.Count}({mostCommonCountPly.Percentage:F2})% fueron {mostCommonCountPly.CountPly}.\n";
+                        message += $"\n\nEl Substrato que más falló fue: {substr.SubstrCode} con {substr.Count} fallos ({substr.Percentage:F2}%).\n";
 
-                        // Calcular los porcentajes y conteos para "Fiber Type" dentro del Count/Ply más común
-                        var fiberTypeGroups = dataTable.AsEnumerable()
-                            .Where(row => row["Substr Code"].ToString() == mostFailedSubstr.SubstrCode && row["Count/Ply"].ToString() == mostCommonCountPly.CountPly)
-                            .GroupBy(row => row["Fibre Type"].ToString())
+                        // Calcular los porcentajes y conteos para "Count/Ply" dentro del Substr que más falló
+                        var countPlyGroups = dataTable.AsEnumerable()
+                            .Where(row => row["Substr Code"].ToString() == substr.SubstrCode)
+                            .GroupBy(row => row["Count/Ply"].ToString())
                             .Select(group => new
                             {
-                                FiberType = group.Key,
+                                CountPly = group.Key,
                                 Count = group.Count(),
-                                Percentage = (double)group.Count() / mostCommonCountPly.Count * 100
+                                Percentage = (double)group.Count() / substr.Count * 100
                             })
                             .OrderByDescending(x => x.Count)
                             .ToList();
 
-                        if (fiberTypeGroups.Count > 0)
+                        if (countPlyGroups.Count > 0)
                         {
-                            message += "\nDesglose por tipo de fibra:\n\n";
-                            foreach (var fiber in fiberTypeGroups)
+                            var mostCommonCountPly = countPlyGroups.First();
+                            message += $"De esos {substr.SubstrCode}, {mostCommonCountPly.Count} ({mostCommonCountPly.Percentage:F2}%) fueron {mostCommonCountPly.CountPly}.\n";
+
+                            // Calcular los porcentajes y conteos para "Fiber Type" dentro del Count/Ply más común
+                            var fiberTypeGroups = dataTable.AsEnumerable()
+                                .Where(row => row["Substr Code"].ToString() == substr.SubstrCode && row["Count/Ply"].ToString() == mostCommonCountPly.CountPly)
+                                .GroupBy(row => row["Fibre Type"].ToString())
+                                .Select(group => new
+                                {
+                                    FiberType = group.Key,
+                                    Count = group.Count(),
+                                    Percentage = (double)group.Count() / mostCommonCountPly.Count * 100
+                                })
+                                .OrderByDescending(x => x.Count)
+                                .ToList();
+
+                            if (fiberTypeGroups.Count > 0)
                             {
-                                message += $"  - {fiber.FiberType}: {fiber.Count} ({fiber.Percentage:F2}%)\n";
+                                message += "\nDesglose por tipo de fibra:\n\n";
+                                foreach (var fiber in fiberTypeGroups)
+                                {
+                                    message += $"  - {fiber.FiberType}: {fiber.Count} ({fiber.Percentage:F2}%)\n";
+                                }
+                                message += "\n";
                             }
-                            message += "\n";
-                        }
 
-                        // Calcular los porcentajes y conteos para "Dyeing Method" dentro del Count/Ply más común
-                        var dyeingMethodGroups = dataTable.AsEnumerable()
-                            .Where(row => row["Substr Code"].ToString() == mostFailedSubstr.SubstrCode && row["Count/Ply"].ToString() == mostCommonCountPly.CountPly)
-                            .GroupBy(row => row["Dyeing Method"].ToString())
-                            .Select(group => new
-                            {
-                                DyeingMethod = group.Key,
-                                Count = group.Count(),
-                                Percentage = (double)group.Count() / mostCommonCountPly.Count * 100
-                            })
-                            .OrderByDescending(x => x.Count)
-                            .ToList();
+                            // Calcular los porcentajes y conteos para "Dyeing Method" dentro del Count/Ply más común
+                            var dyeingMethodGroups = dataTable.AsEnumerable()
+                                .Where(row => row["Substr Code"].ToString() == substr.SubstrCode && row["Count/Ply"].ToString() == mostCommonCountPly.CountPly)
+                                .GroupBy(row => row["Dyeing Method"].ToString())
+                                .Select(group => new
+                                {
+                                    DyeingMethod = group.Key,
+                                    Count = group.Count(),
+                                    Percentage = (double)group.Count() / mostCommonCountPly.Count * 100
+                                })
+                                .OrderByDescending(x => x.Count)
+                                .ToList();
 
-                        if (dyeingMethodGroups.Count > 0)
-                        {
-                            message += "Desglose por método de teñido:\n\n";
-                            foreach (var method in dyeingMethodGroups)
+                            if (dyeingMethodGroups.Count > 0)
                             {
-                                message += $"  - {method.DyeingMethod}: {method.Count} ({method.Percentage:F2}%)\n";
+                                message += "Desglose por método de teñido:\n\n";
+                                foreach (var method in dyeingMethodGroups)
+                                {
+                                    message += $"  - {method.DyeingMethod}: {method.Count} ({method.Percentage:F2}%)\n";
+                                }
+                                message += "\n";
                             }
-                            message += "\n";
-
                         }
                     }
 
