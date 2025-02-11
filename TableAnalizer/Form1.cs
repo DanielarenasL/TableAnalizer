@@ -1,19 +1,10 @@
 ﻿using System;
-using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Data.Common;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using OfficeOpenXml;
-using System.Net.Http;
-using System.Security.Policy;
-using static TableAnalizer.Form1;
-using System.Net.Http.Headers;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace TableAnalizer
@@ -23,7 +14,6 @@ namespace TableAnalizer
         private int totalLotes = 0;
         private int lotesPassed = 0;
         private int lotesFailed = 0;
-        private bool state = false;
         private string filePath = string.Empty;
         private int page = 1;
         private bool isFromDateSet = false;
@@ -264,7 +254,6 @@ namespace TableAnalizer
             }
         }
 
-        //Calcula las estadisticas
         //Calcula las estadísticas
         private void CountBatch(DataTable dataTable)
         {
@@ -497,9 +486,6 @@ namespace TableAnalizer
 
             }
 
-
-
-
             foreach (var panel in panels)
             {
                 panel.Controls.Clear(); // Limpiar el contenido del panel
@@ -663,24 +649,11 @@ namespace TableAnalizer
                         Color.FromArgb(118, 215, 196),  // Pastel Turquoise
                     };
 
-                    // Verificar el contenido de dataTable
-                    foreach (DataRow row in dataTable.Rows)
-                    {
-                        Console.WriteLine($"Unlevel: {row["Unlevel"]}, Substr Code: {row["Substr Code"]}");
-                    }
-
                     var filteredData = dataTable.AsEnumerable()
                         .Where(row => row["Unlevel"].ToString() == "FALSE")
                         .GroupBy(row => row["Substr Code"].ToString())
                         .Select(g => new { SubstrCode = g.Key, Count = g.Count() })
                         .ToList();
-
-                    // Verificar el contenido de filteredData
-                    Console.WriteLine($"Filtered Data Count: {filteredData.Count}");
-                    foreach (var item in filteredData)
-                    {
-                        Console.WriteLine($"SubstrCode: {item.SubstrCode}, Count: {item.Count}");
-                    }
 
                     if (filteredData.Count == 0)
                     {
