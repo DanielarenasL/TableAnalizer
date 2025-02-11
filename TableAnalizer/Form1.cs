@@ -551,28 +551,28 @@ namespace TableAnalizer
             bool allEqual = data.All(d => (d.Count / (double)dataTable.Rows.Count) * 100 == maxPercentage);
 
             var pastelColors = new List<Color>
-    {
-        Color.FromArgb(119, 221, 119),  // Pastel Green
-        Color.FromArgb(174, 198, 207),  // Pastel Blue
-        Color.FromArgb(253, 253, 150),  // Pastel Yellow
-        Color.FromArgb(207, 207, 255),  // Pastel Purple
-        Color.FromArgb(170, 240, 209),  // Pastel Mint
-        Color.FromArgb(178, 223, 238),  // Pastel Aqua
-        Color.FromArgb(255, 218, 185),  // Pastel Peach
-        Color.FromArgb(230, 230, 250),  // Pastel Lavender
-        Color.FromArgb(118, 215, 196),  // Pastel Turquoise
-        Color.FromArgb(217, 234, 211),  // Pastel Lime
-        Color.FromArgb(135, 206, 235),  // Pastel Sky Blue
-        Color.FromArgb(255, 182, 193),  // Light Pink
-        Color.FromArgb(255, 250, 205),  // Pastel Lemon
-        Color.FromArgb(240, 255, 255),  // Pastel Azure
-        Color.FromArgb(255, 221, 193),  // Pastel Coral
-        Color.FromArgb(153, 204, 204),  // Pastel Teal
-        Color.FromArgb(178, 190, 181),  // Pastel Olive
-        Color.FromArgb(245, 245, 220),  // Pastel Beige
-        Color.FromArgb(255, 255, 240),  // Pastel Ivory
-        Color.FromArgb(159, 226, 191)   // Pastel Seafoam
-    };
+            {
+                Color.FromArgb(119, 221, 119),  // Pastel Green
+                Color.FromArgb(174, 198, 207),  // Pastel Blue
+                Color.FromArgb(253, 253, 150),  // Pastel Yellow
+                Color.FromArgb(207, 207, 255),  // Pastel Purple
+                Color.FromArgb(170, 240, 209),  // Pastel Mint
+                Color.FromArgb(178, 223, 238),  // Pastel Aqua
+                Color.FromArgb(255, 218, 185),  // Pastel Peach
+                Color.FromArgb(230, 230, 250),  // Pastel Lavender
+                Color.FromArgb(118, 215, 196),  // Pastel Turquoise
+                Color.FromArgb(217, 234, 211),  // Pastel Lime
+                Color.FromArgb(135, 206, 235),  // Pastel Sky Blue
+                Color.FromArgb(255, 182, 193),  // Light Pink
+                Color.FromArgb(255, 250, 205),  // Pastel Lemon
+                Color.FromArgb(240, 255, 255),  // Pastel Azure
+                Color.FromArgb(255, 221, 193),  // Pastel Coral
+                Color.FromArgb(153, 204, 204),  // Pastel Teal
+                Color.FromArgb(178, 190, 181),  // Pastel Olive
+                Color.FromArgb(245, 245, 220),  // Pastel Beige
+                Color.FromArgb(255, 255, 240),  // Pastel Ivory
+                Color.FromArgb(159, 226, 191)   // Pastel Seafoam
+            };
 
             List<DataPoint> maxPoints = new List<DataPoint>();
 
@@ -637,13 +637,30 @@ namespace TableAnalizer
                 {
                     chart = new Chart();
                     chart.Dock = DockStyle.Fill;
-                    chart.ChartAreas.Add(new ChartArea());
+                    ChartArea chartArea = new ChartArea();
+                    chartArea.BackColor = Color.White; // Establecer el estilo del área del gráfico a blanco
+                    chartArea.AxisX.MajorGrid.Enabled = false; // Desactivar líneas de la cuadrícula en el eje Y
+                    chart.ChartAreas.Add(chartArea);
 
                     series = new Series
                     {
                         ChartType = SeriesChartType.Column,
                         IsValueShownAsLabel = true,
                         Label = "#VALY" // Mostrar valor en cada columna
+                    };
+
+                    // Colores pastel
+                    List<Color> graphicColors= new List<Color>
+                    {
+                        Color.FromArgb(119, 221, 119),  // Pastel Green
+                        Color.FromArgb(174, 198, 207),  // Pastel Blue
+                        Color.FromArgb(253, 253, 150),  // Pastel Yellow
+                        Color.FromArgb(207, 207, 255),  // Pastel Purple
+                        Color.FromArgb(170, 240, 209),  // Pastel Mint
+                        Color.FromArgb(178, 223, 238),  // Pastel Aqua
+                        Color.FromArgb(255, 218, 185),  // Pastel Peach
+                        Color.FromArgb(230, 230, 250),  // Pastel Lavender
+                        Color.FromArgb(118, 215, 196),  // Pastel Turquoise
                     };
 
                     // Verificar el contenido de dataTable
@@ -670,11 +687,21 @@ namespace TableAnalizer
                         Console.WriteLine("No data to display.");
                         return; // Salir si no hay datos para mostrar
                     }
-                    Random rnd = new Random();
+
+                    int colorIndex = 0;
                     foreach (var item in filteredData)
                     {
-                        series.Points.AddXY(item.SubstrCode, item.Count);
-                        point.Color = Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256));
+                        DataPoint point2 = new DataPoint
+                        {
+                            AxisLabel = item.SubstrCode,
+                            YValues = new double[] { item.Count }
+                        };
+
+                        point2.Color = graphicColors[colorIndex];
+                        series.Font = new Font("Arial", 12, FontStyle.Bold);
+
+                        series.Points.Add(point2);
+                        colorIndex++;
                     }
 
                     chart.Series.Add(series);
