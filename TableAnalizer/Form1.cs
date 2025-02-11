@@ -136,9 +136,9 @@ namespace TableAnalizer
 
                 var columnsToShow = new List<string>
                 {
-                    "Substr Code", "Count/Ply", "Dyeclass(es)", "Total Dye Conc Stage 2", "Machine Name", "Total Cheeses", "Fibre Type", "Colour Group", 
-                    "Dyeing Method", "Recipe Status", "Recipe Type", "Colour Category", "Prescreen User", "Prescreen Procedure Path", 
-                    "Shift", "Worker", "Failure Reason"
+                    "Substr Code", "Count/Ply", "Dyeclass(es)", "Total Dye Conc Stage 2", "Machine Name", "Total Cheeses", "Fibre Type", "Colour Group",
+                    "Dyeing Method", "Recipe Status", "Recipe Type", "Colour Category", "Prescreen User", "Prescreen Procedure Path",
+                    "Shift", "Worker", "Failure Reason", "Unlevel"
                 };
 
                 ShowPieCharts(failedDataTable, columnsToShow);
@@ -148,6 +148,7 @@ namespace TableAnalizer
                 MessageBox.Show($"Ocurrió un error al mostrar los gráficos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
 
 
@@ -179,7 +180,7 @@ namespace TableAnalizer
             {
                 "Batch Id", "Machine Name", "Total Cheeses", "Fibre Type", "Colour Group", "Batch Status", "Substr Code",
                 "Count/Ply", "Dyeclass(es)", "Total Dye Conc Stage 1", "Total Dye Conc Stage 2", "Dyeing Method", "Recipe Status",
-                "Recipe Type", "Colour Category", "Prescreen User", "Prescreen Procedure Path", "Shift", "Worker", "Machine Out", "Failure Reason"
+                "Recipe Type", "Colour Category", "Prescreen User", "Prescreen Procedure Path", "Shift", "Worker", "Machine Out", "Failure Reason", "Unlevel"
             };
 
             using (var package = new ExcelPackage(new System.IO.FileInfo(filePath)))
@@ -238,7 +239,7 @@ namespace TableAnalizer
 
             return dataTable;
         }
-
+        
 
         //Pinta de rojo los que no pasaron
         private void DataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -314,7 +315,6 @@ namespace TableAnalizer
 
 
         //Limpia todo al seleccionar otro archivo
-        //Limpia todo al seleccionar otro archivo
         private void Limpiar_Click(object sender, EventArgs e)
         {
             // Limpiar los DataGrid
@@ -355,7 +355,7 @@ namespace TableAnalizer
             var panels = new List<Panel>
             {
                 chartPanel1, chartPanel2, chartPanel3, chartPanel4, chartPanel5, chartPanel6, chartPanel7, chartPanel8,
-                chartPanel9, chartPanel10, chartPanel11, chartPanel12, chartPanel13, chartPanel14, chartPanel15, chartPanel16, chartPanel17
+                chartPanel9, chartPanel10, chartPanel11, chartPanel12, chartPanel13, chartPanel14, chartPanel15, chartPanel16, chartPanel17, chartPanel18
             };
 
             var position1 = new Point(0, 3);
@@ -385,6 +385,7 @@ namespace TableAnalizer
                 chartPanel15.Location = defaultPosition;
                 chartPanel16.Location = defaultPosition;
                 chartPanel17.Location = defaultPosition;
+                chartPanel18.Location = defaultPosition;
 
 
             }
@@ -407,6 +408,7 @@ namespace TableAnalizer
                 chartPanel15.Location = defaultPosition;
                 chartPanel16.Location = defaultPosition;
                 chartPanel17.Location = defaultPosition;
+                chartPanel18.Location = defaultPosition;
 
             }
             else if( page == 3) 
@@ -428,6 +430,7 @@ namespace TableAnalizer
                 chartPanel15.Location = defaultPosition;
                 chartPanel16.Location = defaultPosition;
                 chartPanel17.Location = defaultPosition;
+                chartPanel18.Location = defaultPosition;
 
             }else if( page == 4) 
             {
@@ -448,7 +451,8 @@ namespace TableAnalizer
                 chartPanel15.Location = position3;
                 chartPanel16.Location = position4;
                 chartPanel17.Location = defaultPosition;
-            } else
+                chartPanel18.Location = defaultPosition;
+            } else if(page == 5) 
             {
                 chartPanel1.Location = defaultPosition;
                 chartPanel2.Location = defaultPosition;
@@ -467,7 +471,34 @@ namespace TableAnalizer
                 chartPanel15.Location = defaultPosition;
                 chartPanel16.Location = defaultPosition;
                 chartPanel17.Location = position1;
+                chartPanel18.Location = defaultPosition;
+
             }
+            else
+            {
+                chartPanel1.Location = defaultPosition;
+                chartPanel2.Location = defaultPosition;
+                chartPanel3.Location = defaultPosition;
+                chartPanel4.Location = defaultPosition;
+                chartPanel5.Location = defaultPosition;
+                chartPanel6.Location = defaultPosition;
+                chartPanel7.Location = defaultPosition;
+                chartPanel8.Location = defaultPosition;
+                chartPanel9.Location = defaultPosition;
+                chartPanel10.Location = defaultPosition;
+                chartPanel11.Location = defaultPosition;
+                chartPanel12.Location = defaultPosition;
+                chartPanel13.Location = defaultPosition;
+                chartPanel14.Location = defaultPosition;
+                chartPanel15.Location = defaultPosition;
+                chartPanel16.Location = defaultPosition;
+                chartPanel17.Location = defaultPosition;
+                chartPanel18.Location = position1;
+
+            }
+
+
+
 
             foreach (var panel in panels)
             {
@@ -476,6 +507,8 @@ namespace TableAnalizer
                 panel.BringToFront();
             }
             chartPanel17.Size = new System.Drawing.Size(820, 960);
+            chartPanel18.Size = new System.Drawing.Size(820, 960);
+            
 
             for (int i = 0; i < columnsToShow.Count && i < panels.Count; i++)
             {
@@ -503,9 +536,9 @@ namespace TableAnalizer
 
             var series = new Series
             {
-                ChartType = SeriesChartType.Pie,
+                ChartType = columnName == "Unlevel" ? SeriesChartType.Column : SeriesChartType.Pie,
                 IsValueShownAsLabel = true,
-                Label = "#PERCENT{P0}" // Mostrar nombre y porcentaje
+                Label = columnName == "Unlevel" ? "#VALY" : "#PERCENT{P0}" // Mostrar valor en columnas y porcentaje en pasteles
             };
 
             var data = dataTable.AsEnumerable()
@@ -518,28 +551,28 @@ namespace TableAnalizer
             bool allEqual = data.All(d => (d.Count / (double)dataTable.Rows.Count) * 100 == maxPercentage);
 
             var pastelColors = new List<Color>
-            {
-                Color.FromArgb(119, 221, 119),  // Pastel Green
-                Color.FromArgb(174, 198, 207),  // Pastel Blue
-                Color.FromArgb(253, 253, 150),  // Pastel Yellow
-                Color.FromArgb(207, 207, 255),  // Pastel Purple
-                Color.FromArgb(170, 240, 209),  // Pastel Mint
-                Color.FromArgb(178, 223, 238),  // Pastel Aqua
-                Color.FromArgb(255, 218, 185),  // Pastel Peach
-                Color.FromArgb(230, 230, 250),  // Pastel Lavender
-                Color.FromArgb(118, 215, 196),  // Pastel Turquoise
-                Color.FromArgb(217, 234, 211),  // Pastel Lime
-                Color.FromArgb(135, 206, 235),  // Pastel Sky Blue
-                Color.FromArgb(255, 182, 193),  // Light Pink
-                Color.FromArgb(255, 250, 205),  // Pastel Lemon
-                Color.FromArgb(240, 255, 255),  // Pastel Azure
-                Color.FromArgb(255, 221, 193),  // Pastel Coral
-                Color.FromArgb(153, 204, 204),  // Pastel Teal
-                Color.FromArgb(178, 190, 181),  // Pastel Olive
-                Color.FromArgb(245, 245, 220),  // Pastel Beige
-                Color.FromArgb(255, 255, 240),  // Pastel Ivory
-                Color.FromArgb(159, 226, 191)   // Pastel Seafoam
-            };
+    {
+        Color.FromArgb(119, 221, 119),  // Pastel Green
+        Color.FromArgb(174, 198, 207),  // Pastel Blue
+        Color.FromArgb(253, 253, 150),  // Pastel Yellow
+        Color.FromArgb(207, 207, 255),  // Pastel Purple
+        Color.FromArgb(170, 240, 209),  // Pastel Mint
+        Color.FromArgb(178, 223, 238),  // Pastel Aqua
+        Color.FromArgb(255, 218, 185),  // Pastel Peach
+        Color.FromArgb(230, 230, 250),  // Pastel Lavender
+        Color.FromArgb(118, 215, 196),  // Pastel Turquoise
+        Color.FromArgb(217, 234, 211),  // Pastel Lime
+        Color.FromArgb(135, 206, 235),  // Pastel Sky Blue
+        Color.FromArgb(255, 182, 193),  // Light Pink
+        Color.FromArgb(255, 250, 205),  // Pastel Lemon
+        Color.FromArgb(240, 255, 255),  // Pastel Azure
+        Color.FromArgb(255, 221, 193),  // Pastel Coral
+        Color.FromArgb(153, 204, 204),  // Pastel Teal
+        Color.FromArgb(178, 190, 181),  // Pastel Olive
+        Color.FromArgb(245, 245, 220),  // Pastel Beige
+        Color.FromArgb(255, 255, 240),  // Pastel Ivory
+        Color.FromArgb(159, 226, 191)   // Pastel Seafoam
+    };
 
             List<DataPoint> maxPoints = new List<DataPoint>();
 
@@ -577,7 +610,6 @@ namespace TableAnalizer
                     {
                         var point = result.Object as DataPoint;
                         tooltip.SetToolTip(chart, $"{point.AxisLabel}  Cantidad: {point.YValues[0]}/{dataTable.Rows.Count}");
-                        
                     }
                     else
                     {
@@ -600,6 +632,33 @@ namespace TableAnalizer
                     chartArea.Area3DStyle.Enable3D = true;
                     chartArea.Position = new ElementPosition(0, 0, 105, 105);
                     chartArea.InnerPlotPosition = new ElementPosition(10, 10, 85, 85);
+                }
+                else if (columnName == "Unlevel")
+                {
+                    chart = new Chart();
+                    chart.Dock = DockStyle.Fill;
+                    chart.ChartAreas.Add(new ChartArea());
+
+                    series = new Series
+                    {
+                        ChartType = SeriesChartType.Column,
+                        IsValueShownAsLabel = true,
+                        Label = "#VALY" // Mostrar valor en cada columna
+                    };
+
+                    var filteredData = dataTable.AsEnumerable()
+                        .Where(row => row["Unlevel"].ToString() == "failed")
+                        .GroupBy(row => row["Substr Code"].ToString())
+                        .Select(g => new { SubstrCode = g.Key, Count = g.Count() })
+                        .ToList();
+
+                    foreach (var item in filteredData)
+                    {
+                        series.Points.AddXY(item.SubstrCode, item.Count);
+                    }
+
+                    chart.Series.Add(series);
+                    chartPanel18.Controls.Add(chart); // Agregar el gráfico al panel correspondiente
                 }
                 else
                 {
@@ -632,7 +691,7 @@ namespace TableAnalizer
 
         private void Next_Click(object sender, EventArgs e)
         {
-            if (page <= 4)
+            if (page <= 5)
             {
                 page++;
 
